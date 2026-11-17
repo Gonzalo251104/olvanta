@@ -26,14 +26,29 @@ services:
     volumes:
       - ./init-db.sh:/init-db.sh:ro
     entrypoint: ["/bin/bash", "/init-db.sh"]
-  api:
+  migrate:
     build:
       context: ..
       target: api
     depends_on:
       sql-init:
         condition: service_completed_successfully
+    command: ["--initialize"]
     environment:
+      ConnectionStrings__Olvanta: "Server=sql;Database=Olvanta;User ID=sa;Password=${OLVANTA_SA_PASSWORD};Encrypt=True;TrustServerCertificate=True"
+      Bootstrap__AdminPassword: ${OLVANTA_ADMIN_PASSWORD:?Ejecute Start-Local.ps1}
+  api:
+    build:
+      context: ..
+      target: api
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    volumes:
+      - identity-keys:/app/keys
+    environment:
+      Security__KeyPath: /app/keys
+      Security__LocalHttp: "true"
       ConnectionStrings__Olvanta: "Server=sql;Database=Olvanta;User ID=olvanta_app;Password=${OLVANTA_APP_PASSWORD:?Ejecute Start-Local.ps1};Encrypt=True;TrustServerCertificate=True;Connect Timeout=3"
   worker:
     build:
@@ -50,3 +65,4 @@ services:
       - "127.0.0.1:${OLVANTA_PORT:-5180}:8080"
 volumes:
   sql-data:
+  identity-keys:

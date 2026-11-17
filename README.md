@@ -4,13 +4,13 @@ Backend de operaciones comerciales en ASP.NET Core y SQL Server.
 
 ## Arranque local
 
-Coloque `olvanta-api` y `olvanta-web` como repositorios hermanos en la rama `develop`. Utilice Docker con contenedores Linux en x86-64, Docker Compose y PowerShell. SQL Server necesita al menos 2 GB de memoria disponibles para su contenedor. Desde la carpeta que contiene ambos repositorios, ejecute:
+Coloque `olvanta-api` y `olvanta-web` como repositorios hermanos con las revisiones compatibles de la API y la web (0.2.0 para esta fase). Utilice Docker con contenedores Linux en x86-64, Docker Compose y PowerShell. SQL Server necesita al menos 2 GB de memoria disponibles para su contenedor. Desde la carpeta que contiene ambos repositorios, ejecute:
 
 ```powershell
 ./olvanta-api/scripts/Start-Local.ps1
 ```
 
-Abra **http://127.0.0.1:5180**. La pantalla muestra “Sistema operativo” cuando la API puede conectarse a la base Olvanta. La primera ejecución descarga imágenes, compila y crea el volumen de SQL Server. El script genera dos credenciales en `deploy/.env`, excluido de Git. Conserve ese archivo para reutilizar el volumen. Para cambiar el puerto establezca `$env:OLVANTA_PORT` antes de arrancar.
+Abra **http://127.0.0.1:5180**. Ingrese con el usuario `admin` y la contraseña inicial `OLVANTA_ADMIN_PASSWORD` de `deploy/.env`. Puede consultar la disponibilidad en `/estado`. La primera ejecución descarga imágenes, compila y crea el volumen de SQL Server. El script genera las credenciales SQL y la contraseña inicial de administración en `deploy/.env`, excluido de Git. Conserve ese archivo para reutilizar el volumen. Para cambiar el puerto establezca `$env:OLVANTA_PORT` antes de arrancar.
 
 | Ruta | Verificación |
 | --- | --- |
@@ -32,7 +32,7 @@ dotnet build -c Release --no-restore
 dotnet test -c Release --no-build
 ```
 
-Para depurar fuera de Docker defina `ConnectionStrings__Olvanta` con una conexión a su base local y ejecute `dotnet run --project src/Olvanta.Api --urls http://127.0.0.1:5080`. El proxy de desarrollo de Vite usa ese puerto.
+Para depurar fuera de Docker defina `ConnectionStrings__Olvanta` con una conexión a su base local y ejecute `dotnet run --project src/Olvanta.Api --urls http://127.0.0.1:5080`. El proxy de Vite usa ese puerto. Para HTTP local configure `Security__LocalHttp=true`. Aplique primero las migraciones con una conexión de aprovisionamiento y `dotnet run --project src/Olvanta.Api -- --initialize`, proporcionando `Bootstrap__AdminPassword` para una base nueva.
 
 La CI valida el contrato servido y la integración con el repositorio hermano. Al publicar en GitHub, use los nombres `olvanta-api` y `olvanta-web` bajo el mismo propietario. La variable `OLVANTA_WEB_REF` permite fijar el commit web compatible (por defecto, `develop`). Para un repositorio hermano privado, configure `OLVANTA_READ_TOKEN` con lectura de contenidos.
 
@@ -42,9 +42,10 @@ El 17 de noviembre de 2026 se construyeron las imágenes con restauración bloqu
 
 ## Definición del proyecto
 
+- [Guía de seguridad y maestros](docs/business/security-and-masters.md)
 - [Plan original del 17 de noviembre de 2026](docs/plan.md)
 - [Alcance, backlog y criterios de aceptación](docs/business/backlog.md)
 - [Glosario y reglas del negocio](docs/business/glossary.md)
 - [Decisiones de arquitectura, identidad y contrato](docs/adr)
-- [Contrato OpenAPI 0.1.0](contracts/olvanta-v1.json)
+- [Contrato OpenAPI 0.2.0](contracts/olvanta-v1.json)
 - [Flujo de contribución](CONTRIBUTING.md)

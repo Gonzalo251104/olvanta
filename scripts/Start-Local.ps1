@@ -9,14 +9,20 @@ function New-LocalCredential {
     try { $generator.GetBytes($bytes) } finally { $generator.Dispose() }
     'Ov1' + [BitConverter]::ToString($bytes).Replace('-', '').ToLowerInvariant()
 }
-if (!(Test-Path -LiteralPath $envPath)) {
-    $content = "OLVANTA_SA_PASSWORD=$(New-LocalCredential)`nOLVANTA_APP_PASSWORD=$(New-LocalCredential)`n"
-    $stream = [IO.File]::Open($envPath, 'CreateNew', 'Write', 'None')
-    try {
-        $data = [Text.Encoding]::ASCII.GetBytes($content)
-        $stream.Write($data, 0, $data.Length)
-    } finally { $stream.Dispose() }
-}
+$stream = [IO.File]::Open($envPath, 'OpenOrCreate', 'ReadWrite', 'None')
+try {
+    $reader = [IO.StreamReader]::new($stream, [Text.Encoding]::UTF8, $true, 1024, $true)
+    try { $existing = $reader.ReadToEnd() } finally { $reader.Dispose() }
+    $keys = if ($existing.Length -eq 0) {
+        'OLVANTA_SA_PASSWORD', 'OLVANTA_APP_PASSWORD', 'OLVANTA_ADMIN_PASSWORD'
+    } else { 'OLVANTA_ADMIN_PASSWORD' }
+    foreach ($key in $keys) {
+        if ($existing -notmatch "(?m)^${key}=") {
+            $data = [Text.Encoding]::ASCII.GetBytes("`n$key=$(New-LocalCredential)`n")
+            $stream.Write($data, 0, $data.Length)
+        }
+    }
+} finally { $stream.Dispose() }
 Push-Location $deployment
 try {
     docker compose up --build -d

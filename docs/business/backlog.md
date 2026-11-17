@@ -24,6 +24,10 @@ Los identificadores remiten a las fases y secciones del [plan del 17 de noviembr
 | MNT-01 | 9, §17 | Evolución e importaciones | Una importación inválida permite diagnosticar la fila. Una corrección tiene reproducción y prueba de regresión. Los flujos anteriores siguen funcionando. |
 | REL-01 | 10, §§8.10, 14–18 | Reportes y entrega integrada | Se demuestra el recorrido completo, se exportan resultados, se registra la pareja de versiones y se restaura un respaldo en un entorno limpio. |
 
+### Evidencia de la fase 2
+
+IAM-01 y CAT-01 se entregan en la pareja API/web 0.2.0. La [guía de seguridad y maestros](security-and-masters.md) incluye el recorrido de operación, la matriz de roles y los comandos para repetir las pruebas con SQL Server. Los escenarios automatizados cubren la sucursal ajena, la revocación durante una sesión, la auditoría de permisos y la conservación de una ficha inactivada.
+
 ### Dependencias que se resolverán en su fase
 
 Para INV-01 y OLV-01 se acordarán precisión, conversiones y valoración. POS-01 requiere políticas de descuentos y redondeo. BIL-01 requiere verificar la modalidad y reglas de SUNAT vigentes para el emisor. La emisión real requiere credenciales, certificado y aceptación operativa. RNT-01 y PRK-01 requieren definir mora, prorrateo, tolerancia y redondeo. REL-01 requiere definir el alojamiento, licencias y carga de referencia.
