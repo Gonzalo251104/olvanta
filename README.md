@@ -2,7 +2,7 @@
 
 Interfaz en español de la plataforma de operaciones comerciales Olvanta.
 
-La primera pantalla consulta la API, muestra la disponibilidad de SQL Server y permite repetir la comprobación. El entorno integrado usa la web 0.1.0 y el contrato de API 0.1.0.
+La web 0.2.0 usa el contrato de API 0.2.0. La raíz abre el acceso a los maestros, al selector de sucursales y a la administración por permisos. El estado técnico sigue disponible en `/estado`.
 
 ## Arranque
 
@@ -26,7 +26,7 @@ npx --no-install playwright install chromium
 npm run test:e2e
 ```
 
-La prueba de navegador utiliza la aplicación integrada en el puerto 5180. Puede indicar otra URL con `OLVANTA_BASE_URL`. El workflow de CI clona el backend del mismo propietario de GitHub. La variable `OLVANTA_API_REF` fija la revisión compatible (por defecto, `develop`). Para repositorios privados se necesita el secreto `OLVANTA_READ_TOKEN` con lectura de contenidos.
+Los escenarios de seguridad crean datos de prueba. Se habilitan con `OLVANTA_TEST_ADMIN_PASSWORD` en un entorno desechable. El procedimiento está en `olvanta-api/docs/business/security-and-masters.md`. La prueba de navegador utiliza la aplicación integrada en el puerto 5180. Puede indicar otra URL con `OLVANTA_BASE_URL`. El workflow de CI clona el backend del mismo propietario de GitHub. La variable `OLVANTA_API_REF` fija la revisión compatible (por defecto, `develop`). Para repositorios privados se necesita el secreto `OLVANTA_READ_TOKEN` con lectura de contenidos.
 
 En la revisión inicial, `npm audit` señala `picomatch` y sus dependientes entre las herramientas de desarrollo (GHSA-fc5q-39xc-vjpf). Los patrones utilizados por estas herramientas se definen en el repositorio. `npm audit --omit=dev` devuelve cero avisos. Revise la disponibilidad de una corrección al actualizar el lockfile.
 

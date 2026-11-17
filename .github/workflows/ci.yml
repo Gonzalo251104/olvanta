@@ -39,4 +39,7 @@ jobs:
         run: ./olvanta-api/scripts/Start-Local.ps1
       - name: Browse status page
         working-directory: olvanta-web
-        run: npm run test:e2e
+        shell: pwsh
+        run: |
+          $env:OLVANTA_TEST_ADMIN_PASSWORD = ((Select-String -LiteralPath '../olvanta-api/deploy/.env' -Pattern '^OLVANTA_ADMIN_PASSWORD=').Line -split '=', 2)[1]
+          npm run test:e2e

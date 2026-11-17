@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 test('displays the live API and database status', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('/estado')
   await expect(page.getByRole('heading', { name: 'Sistema operativo' })).toBeVisible()
   const nextStatus = page.waitForResponse(response => response.url().endsWith('/api/v1/system/status'))
   await page.getByRole('button', { name: 'Volver a comprobar' }).click()
