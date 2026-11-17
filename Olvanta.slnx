@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Olvanta.Domain/Olvanta.Domain.csproj" />
+    <Project Path="src/Olvanta.Application/Olvanta.Application.csproj" />
+    <Project Path="src/Olvanta.Infrastructure/Olvanta.Infrastructure.csproj" />
+    <Project Path="src/Olvanta.Api/Olvanta.Api.csproj" />
+    <Project Path="src/Olvanta.Worker/Olvanta.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Olvanta.FoundationTests/Olvanta.FoundationTests.csproj" />
+  </Folder>
+</Solution>

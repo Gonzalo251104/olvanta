@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Olvanta.Domain/Olvanta.Domain.csproj" />
+  </ItemGroup>
+</Project>
