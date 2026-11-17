@@ -1,0 +1,42 @@
+name: Web
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: olvanta-web
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: olvanta-web/.nvmrc
+          cache: npm
+          cache-dependency-path: olvanta-web/package-lock.json
+      - name: Install and validate web
+        working-directory: olvanta-web
+        run: |
+          npm ci
+          npm run lint
+          npm run check:api
+          npm test
+          npm run build
+          npx --no-install playwright install --with-deps chromium
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/olvanta-api
+          ref: ${{ vars.OLVANTA_API_REF || 'develop' }}
+          token: ${{ secrets.OLVANTA_READ_TOKEN || github.token }}
+          path: olvanta-api
+      - name: Compare contract snapshots
+        run: cmp olvanta-api/contracts/olvanta-v1.json olvanta-web/contracts/olvanta-v1.json
+      - name: Start clean stack
+        shell: pwsh
+        run: ./olvanta-api/scripts/Start-Local.ps1
+      - name: Browse status page
+        working-directory: olvanta-web
+        run: npm run test:e2e
