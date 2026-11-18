@@ -54,6 +54,11 @@ internal sealed class CashDesk(OlvantaDbContext db)
                 action.Method = input.Method;
                 if (input.Method == "cash") action.CashDelta = input.Kind == "pay" ? amount : -amount;
                 break;
+            case "parking-pay":
+                if (input.Method is not ("cash" or "card" or "transfer")) throw new TradeException("Seleccione el medio de pago.", 400);
+                action.Method = input.Method;
+                if (input.Method == "cash") action.CashDelta = amount;
+                break;
             case "deposit-in":
             case "deposit-out":
                 if (action.DepositLeaseId == null || input.Method is not ("cash" or "card" or "transfer"))

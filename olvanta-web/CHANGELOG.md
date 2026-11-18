@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.7.0
+
+Panel de ocupación, entradas y salidas, abonos, configuración de tarifa y constancias imprimibles.
+
 ## 0.6.0
 
 Consulta de disponibilidad, operación de contratos, cuotas, cargos, garantías, renovación y cobro por sucursal desde Alquileres. Acceso a la facturación de cada cuota.

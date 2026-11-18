@@ -1378,6 +1378,365 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/branches/{branchId}/parking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    siteId?: number | string;
+                    historyPlate?: string;
+                };
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParkingDeskView"];
+                        "application/json": components["schemas"]["ParkingDeskView"];
+                        "text/json": components["schemas"]["ParkingDeskView"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/parking/sites": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParkingSiteInput"];
+                    "text/json": components["schemas"]["ParkingSiteInput"];
+                    "application/*+json": components["schemas"]["ParkingSiteInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/parking/sites/{siteId}/zones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    siteId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParkingZoneInput"];
+                    "text/json": components["schemas"]["ParkingZoneInput"];
+                    "application/*+json": components["schemas"]["ParkingZoneInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/parking/sites/{siteId}/rates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    siteId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParkingRateInput"];
+                    "text/json": components["schemas"]["ParkingRateInput"];
+                    "application/*+json": components["schemas"]["ParkingRateInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/parking/sites/{siteId}/entries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    siteId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParkingEntryInput"];
+                    "text/json": components["schemas"]["ParkingEntryInput"];
+                    "application/*+json": components["schemas"]["ParkingEntryInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/parking/sites/{siteId}/stays/{id}/quote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    siteId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ParkingQuote"];
+                        "application/json": components["schemas"]["ParkingQuote"];
+                        "text/json": components["schemas"]["ParkingQuote"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/parking/sites/{siteId}/stays/{id}/exit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    siteId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParkingExitInput"];
+                    "text/json": components["schemas"]["ParkingExitInput"];
+                    "application/*+json": components["schemas"]["ParkingExitInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/parking/sites/{siteId}/passes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    siteId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ParkingPassInput"];
+                    "text/json": components["schemas"]["ParkingPassInput"];
+                    "application/*+json": components["schemas"]["ParkingPassInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/branches/{branchId}/rentals": {
         parameters: {
             query?: never;
@@ -2392,6 +2751,153 @@ export interface components {
             establishments: components["schemas"]["SiteView"][];
             series: components["schemas"]["SeriesView"][];
         };
+        ParkingDeskView: {
+            /** Format: date */
+            today: string;
+            sites: components["schemas"]["ParkingSiteView"][];
+            /** Format: int32 */
+            siteId: null | number | string;
+            zones: components["schemas"]["ParkingZoneView"][];
+            rate: null | components["schemas"]["ParkingRateView"];
+            stays: components["schemas"]["ParkingStayView"][];
+            passes: components["schemas"]["ParkingPassView"][];
+            /** Format: int32 */
+            cashSessionId: null | number | string;
+            services: components["schemas"]["InventoryOption"][];
+            customers: components["schemas"]["InventoryOption"][];
+        };
+        ParkingEntryInput: {
+            /** Format: uuid */
+            requestId: string;
+            /** Format: int32 */
+            zoneId: number | string;
+            plate: string;
+        };
+        ParkingExitInput: {
+            /** Format: uuid */
+            requestId: string;
+            /** Format: double */
+            expectedAmount: number | string;
+            /** Format: int32 */
+            sessionId?: null | number | string;
+            method?: null | string;
+            /** Format: int32 */
+            customerId?: null | number | string;
+        };
+        ParkingPassInput: {
+            /** Format: uuid */
+            requestId: string;
+            plate: string;
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            through: string;
+            /** Format: double */
+            price: number | string;
+            /** Format: int32 */
+            sessionId: number | string;
+            method: string;
+            /** Format: int32 */
+            customerId?: null | number | string;
+        };
+        ParkingPassView: {
+            /** Format: int32 */
+            id: number | string;
+            plate: string;
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            through: string;
+            /** Format: double */
+            price: number | string;
+            method: null | string;
+            /** Format: int32 */
+            saleId: null | number | string;
+            /** Format: int64 */
+            paymentId: number | string;
+        };
+        ParkingQuote: {
+            /** Format: int32 */
+            stayId: number | string;
+            /** Format: int32 */
+            blocks: number | string;
+            /** Format: double */
+            amount: number | string;
+            currency: string;
+        };
+        ParkingRateInput: {
+            /** Format: int32 */
+            serviceId: number | string;
+            /** Format: int32 */
+            blockMinutes: number | string;
+            /** Format: int32 */
+            graceMinutes: number | string;
+            /** Format: double */
+            blockPrice: number | string;
+        };
+        ParkingRateView: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            serviceId: number | string;
+            /** Format: int32 */
+            blockMinutes: number | string;
+            /** Format: int32 */
+            graceMinutes: number | string;
+            /** Format: double */
+            blockPrice: number | string;
+        };
+        ParkingSiteInput: {
+            name: string;
+        };
+        ParkingSiteView: {
+            /** Format: int32 */
+            id: number | string;
+            name: string;
+            currency: string;
+        };
+        ParkingStayView: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            zoneId: number | string;
+            plate: string;
+            /** Format: date-time */
+            entered: string;
+            /** Format: date-time */
+            exited: null | string;
+            /** Format: int32 */
+            passId: null | number | string;
+            /** Format: int32 */
+            blockMinutes: number | string;
+            /** Format: int32 */
+            graceMinutes: number | string;
+            /** Format: double */
+            blockPrice: number | string;
+            /** Format: int32 */
+            blocks: null | number | string;
+            /** Format: double */
+            amount: null | number | string;
+            method: null | string;
+            /** Format: int32 */
+            saleId: null | number | string;
+            /** Format: int64 */
+            paymentId: null | number | string;
+        };
+        ParkingZoneInput: {
+            name: string;
+            /** Format: int32 */
+            capacity: number | string;
+        };
+        ParkingZoneView: {
+            /** Format: int32 */
+            id: number | string;
+            name: string;
+            /** Format: int32 */
+            capacity: number | string;
+            /** Format: int32 */
+            occupied: number | string;
+        };
         PasswordChange: {
             currentPassword: string;
             newPassword: string;
@@ -2523,6 +3029,8 @@ export interface components {
             history: components["schemas"]["TradeEntry"][];
             /** Format: int32 */
             leaseId?: null | number | string;
+            /** @default false */
+            isParking: boolean;
         };
         SaleItem: {
             /** Format: int32 */

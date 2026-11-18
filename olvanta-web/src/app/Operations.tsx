@@ -103,6 +103,7 @@ function PasswordForm() {
 }
 
 const RentalPage = lazy(() => import('../features/rentals/RentalPage'))
+const ParkingPage = lazy(() => import('../features/parking/ParkingPage'))
 
 function Workspace() {
   const cache = useQueryClient()
@@ -176,6 +177,12 @@ function Workspace() {
             <>
               <MasterLinks label="Directorio" entries={['customers', 'suppliers']} />
               <MasterLinks label="Catálogo" entries={['products', 'services']} />
+              {branch.permissions.includes('parking.read') && (
+                <div className="nav-group">
+                  <span>Movilidad</span>
+                  <NavLink to="/estacionamientos">Estacionamientos</NavLink>
+                </div>
+              )}
               {branch.permissions.includes('rentals.read') && (
                 <div className="nav-group">
                   <span>Inmuebles</span>
@@ -217,6 +224,16 @@ function Workspace() {
         {logout.error && <p role="alert">{logout.error.message}</p>}
         <Routes>
           <Route path="/cuenta" element={<PasswordForm />} />
+          {branch?.permissions.includes('parking.read') && (
+            <Route
+              path="/estacionamientos"
+              element={
+                <Suspense fallback={<p>Cargando estacionamientos…</p>}>
+                  <ParkingPage key={branch.id} branch={branch} />
+                </Suspense>
+              }
+            />
+          )}
           {branch?.permissions.includes('rentals.read') && (
             <Route
               path="/alquileres"

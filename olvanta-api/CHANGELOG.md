@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.7.0
+
+Estacionamientos por sucursal, capacidad por zona, versiones de tarifa, abonos y salidas idempotentes con conciliación de caja.
+
 ## 0.6.0
 
 Contratos por local con control de solapamiento, cuota mensual idempotente y prorrateo. Cuotas y cargos autorizados comparten su cuenta por cobrar con ventas y facturación. Recepción y devolución de garantías en caja.

@@ -39,6 +39,8 @@ public sealed class SalesController(OlvantaDbContext db, SessionAccess access) :
         var warehouses = await db.Warehouses.Where(x => x.BranchId == branchId).ToDictionaryAsync(x => x.Id, x => x.Name);
         var events = (await db.SalesEvents.AsNoTracking().Where(x => x.BranchId == branchId && x.SaleId != null).OrderBy(x => x.Id).ToListAsync()).ToLookup(e => e.SaleId);
         var rentals = await db.RentCharges.Where(c => c.Sale.BranchId == branchId).ToDictionaryAsync(c => c.SaleId, c => (int?)c.LeaseId);
+        var parking = (await db.ParkingStays.Where(s => s.Payment != null && s.Payment.BranchId == branchId && s.Payment.SaleId != null).Select(s => s.Payment!.SaleId)
+            .Union(db.ParkingPasses.Where(p => p.Payment.BranchId == branchId && p.Payment.SaleId != null).Select(p => p.Payment.SaleId)).ToListAsync()).ToHashSet();
         var result = sales.Select(s =>
         {
             var history = events[s.Id];
@@ -49,7 +51,7 @@ public sealed class SalesController(OlvantaDbContext db, SessionAccess access) :
                 l.Price, l.Discount, l.TaxRate, l.Tax, l.Total, l.WarehouseId is int w ? warehouses[w] : null, l.Lot)).ToList();
             return new SaleDetail(s.Id, s.Customer, s.Currency, s.Terms, s.DueDate, s.Stage, s.Created, total,
                 s.Stage is "confirmed" or "dispatched" ? SalesMath.Balance(total, history) : 0,
-                lines, history.Select(TradeEntry.From).ToList(), rentals.GetValueOrDefault(s.Id));
+                lines, history.Select(TradeEntry.From).ToList(), rentals.GetValueOrDefault(s.Id), parking.Contains(s.Id));
         }).ToList();
         await tx.CommitAsync();
         return result;

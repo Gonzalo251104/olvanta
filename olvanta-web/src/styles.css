@@ -153,6 +153,13 @@ button.quiet { border-color: #8b7286; color: inherit; background: transparent; w
 .rent-account dt { color: var(--muted); font-size: .85rem; }
 .rent-account dd { margin: .15rem 0 .65rem; font-weight: 650; }
 .rent-form { max-width: 38rem; }
+.parking-toolbar { grid-template-columns: minmax(12rem, 20rem) 1fr; align-items: end; margin-bottom: 1rem; }
+.parking-zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: .75rem; margin-bottom: 1rem; }
+.parking-zone { display: grid; gap: .45rem; }
+.parking-zone progress { width: 100%; accent-color: var(--copper, #945038); }
+.parking-work { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.parking-ticket { margin-top: 1rem; max-width: 40rem; }
+@media (max-width: 750px) { .parking-work, .parking-toolbar { grid-template-columns: minmax(0, 1fr); } }
 .rent-period { grid-template-columns: minmax(9rem, 14rem) auto; align-items: end; justify-content: start; }
 @media (max-width: 600px) { .rent-account, .rent-period { grid-template-columns: 1fr; } }
 .account-panel h1 { margin-bottom: 1.5rem; }

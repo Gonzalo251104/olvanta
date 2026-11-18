@@ -701,6 +701,219 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.ToTable("Masters", "catalog");
                 });
 
+            modelBuilder.Entity("Olvanta.Domain.ParkingPass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("From")
+                        .HasColumnType("date");
+
+                    b.Property<long>("PaymentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Plate")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
+
+                    b.Property<string>("RequestHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<Guid>("RequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SiteId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("Through")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentId")
+                        .IsUnique();
+
+                    b.HasIndex("SiteId", "RequestId")
+                        .IsUnique();
+
+                    b.HasIndex("SiteId", "Plate", "From");
+
+                    b.ToTable("Passes", "parking");
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.ParkingRate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BlockMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("BlockPrice")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
+                    b.Property<int>("GraceMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SiteId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TaxRate")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("SiteId");
+
+                    b.ToTable("Rates", "parking");
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.ParkingSite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("Sites", "parking");
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.ParkingStay", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("Blocks")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("Entered")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("EntryKey")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ExitHash")
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<Guid?>("ExitKey")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset?>("Exited")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("PassId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("PaymentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Plate")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
+
+                    b.Property<int>("RateId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SiteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ZoneId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PassId");
+
+                    b.HasIndex("PaymentId")
+                        .IsUnique()
+                        .HasFilter("[PaymentId] IS NOT NULL");
+
+                    b.HasIndex("RateId");
+
+                    b.HasIndex("ZoneId")
+                        .HasFilter("[Exited] IS NULL");
+
+                    b.HasIndex("SiteId", "EntryKey")
+                        .IsUnique();
+
+                    b.HasIndex("SiteId", "ExitKey")
+                        .IsUnique()
+                        .HasFilter("[ExitKey] IS NOT NULL");
+
+                    b.HasIndex("SiteId", "Plate")
+                        .IsUnique()
+                        .HasFilter("[Exited] IS NULL");
+
+                    b.ToTable("Stays", "parking");
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.ParkingZone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("SiteId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SiteId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("Zones", "parking");
+                });
+
             modelBuilder.Entity("Olvanta.Domain.Purchase", b =>
                 {
                     b.Property<int>("Id")
@@ -1408,6 +1621,89 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.HasOne("Olvanta.Domain.Branch", null)
                         .WithMany()
                         .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.ParkingPass", b =>
+                {
+                    b.HasOne("Olvanta.Domain.SalesEvent", "Payment")
+                        .WithOne()
+                        .HasForeignKey("Olvanta.Domain.ParkingPass", "PaymentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.ParkingSite", null)
+                        .WithMany()
+                        .HasForeignKey("SiteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Payment");
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.ParkingRate", b =>
+                {
+                    b.HasOne("Olvanta.Domain.MasterRecord", null)
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.ParkingSite", null)
+                        .WithMany()
+                        .HasForeignKey("SiteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.ParkingSite", b =>
+                {
+                    b.HasOne("Olvanta.Domain.Branch", null)
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.ParkingStay", b =>
+                {
+                    b.HasOne("Olvanta.Domain.ParkingPass", null)
+                        .WithMany()
+                        .HasForeignKey("PassId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Olvanta.Domain.SalesEvent", "Payment")
+                        .WithOne()
+                        .HasForeignKey("Olvanta.Domain.ParkingStay", "PaymentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Olvanta.Domain.ParkingRate", null)
+                        .WithMany()
+                        .HasForeignKey("RateId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.ParkingSite", null)
+                        .WithMany()
+                        .HasForeignKey("SiteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.ParkingZone", null)
+                        .WithMany()
+                        .HasForeignKey("ZoneId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Payment");
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.ParkingZone", b =>
+                {
+                    b.HasOne("Olvanta.Domain.ParkingSite", null)
+                        .WithMany()
+                        .HasForeignKey("SiteId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

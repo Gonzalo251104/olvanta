@@ -19,6 +19,11 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
     public DbSet<StockMinimum> Minimums => Set<StockMinimum>();
     public DbSet<StockMovement> Movements => Set<StockMovement>();
     public DbSet<Sale> Sales => Set<Sale>();
+    public DbSet<ParkingSite> ParkingSites => Set<ParkingSite>();
+    public DbSet<ParkingZone> ParkingZones => Set<ParkingZone>();
+    public DbSet<ParkingRate> ParkingRates => Set<ParkingRate>();
+    public DbSet<ParkingStay> ParkingStays => Set<ParkingStay>();
+    public DbSet<ParkingPass> ParkingPasses => Set<ParkingPass>();
     public DbSet<CommercialUnit> Units => Set<CommercialUnit>();
     public DbSet<LeaseContract> Leases => Set<LeaseContract>();
     public DbSet<RentCharge> RentCharges => Set<RentCharge>();
@@ -44,6 +49,7 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
         SalesModel.Configure(model);
         BillingModel.Configure(model);
         RentalModel.Configure(model);
+        ParkingModel.Configure(model);
         var branch = model.Entity<Branch>();
         branch.ToTable("Branches", "organization");
         branch.Property(x => x.Name).HasMaxLength(100);
