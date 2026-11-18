@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Empresa de ejemplo",
+    "code": "EJEMPLO-001",
+    "personType": "company",
+    "documentType": "Otro",
+    "address": "",
+    "contact": "",
+    "terms": "",
+    "active": true
+  }
+]
