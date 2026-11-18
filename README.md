@@ -1,6 +1,6 @@
 # Olvanta
 
-Plataforma de operaciones comerciales para una empresa peruana. La versión 0.2.0 incluye usuarios y permisos por sucursal, auditoría, configuración de la organización y maestros de clientes, proveedores, productos y servicios.
+Plataforma de operaciones comerciales para una empresa peruana. La versión 0.3.0 permite comprar mercadería, recibirla por lotes, trasladarla entre almacenes y consultar existencias, reservas y kardex por sucursal.
 
 | Componente | Contenido |
 | --- | --- |
@@ -8,6 +8,7 @@ Plataforma de operaciones comerciales para una empresa peruana. La versión 0.2.
 | [Web](olvanta-web/README.md) | Aplicación React y TypeScript |
 | [Plan](olvanta-api/docs/plan.md) | Alcance y fases del proyecto |
 | [Guía de seguridad y maestros](olvanta-api/docs/business/security-and-masters.md) | Uso y verificación de la fase 2 |
+| [Guía de compras e inventario](olvanta-api/docs/business/purchasing-and-inventory.md) | Operación, valoración y pruebas de la fase 3 |
 
 ## Arranque local
 

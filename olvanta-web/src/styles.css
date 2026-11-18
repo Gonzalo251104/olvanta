@@ -121,6 +121,15 @@ button.quiet { border-color: #8b7286; color: inherit; background: transparent; w
   min-width: 0;
 }
 .panel .section-head { margin-bottom: .75rem; }
+.stock-tabs { margin-bottom: 1.25rem; }
+.stock-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1rem; align-items: start; }
+.stock-layout h2 { margin-bottom: 1rem; }
+.stock-order { border-top: 1px solid var(--rule); padding-block: .75rem; }
+.stock-order ul { padding-left: 1.25rem; }
+.stock-order li { margin-bottom: .6rem; }
+.stock-order li span, .stock-order li small, .content table small { display: block; }
+.stock-low { color: #873829; font-weight: 650; }
+.table-wrap summary { cursor: pointer; font-size: .85rem; }
 .account-panel { max-width: 37rem; }
 .account-panel h1 { margin-bottom: 1.5rem; }
 .fields { display: grid; align-content: start; gap: 1rem; }

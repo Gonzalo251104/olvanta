@@ -71,14 +71,21 @@ public sealed class MastersController(OlvantaDbContext db, SessionAccess access)
     {
         var rejected = await CheckWrite(branchId, kind, input);
         if (rejected != null) return rejected;
+        await using var tx = await db.Database.BeginTransactionAsync();
+        if (kind == "products") await db.LockBranchAsync(branchId);
         var record = await Scope(branchId, kind).SingleOrDefaultAsync(x => x.Id == id);
         if (record == null) return NotFound();
         if (input.Version?.Length != 8) return Problem(statusCode: 400, detail: "Se requiere la versión del registro.");
         if (!record.Version.SequenceEqual(input.Version)) return Conflict();
+        if (kind == "products" && input.Unit?.Trim() != record.Unit &&
+            (await db.PurchaseLines.AnyAsync(x => x.ProductId == id) || await db.Movements.AnyAsync(x => x.ProductId == id) ||
+            await db.Minimums.AnyAsync(x => x.ProductId == id)))
+            return Problem(statusCode: 409, detail: "El producto ya tiene inventario registrado en su unidad base.");
         input.Apply(record);
         db.Entry(record).Property(x => x.Name).IsModified = true;
         Audit(record, "master.updated");
         await db.SaveChangesAsync();
+        await tx.CommitAsync();
         return NoContent();
     }
 

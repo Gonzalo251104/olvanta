@@ -13,11 +13,26 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
     public DbSet<BranchGrant> Grants => Set<BranchGrant>();
     public DbSet<MasterRecord> Masters => Set<MasterRecord>();
     public DbSet<AuditEntry> Audit => Set<AuditEntry>();
+    public DbSet<Warehouse> Warehouses => Set<Warehouse>();
+    public DbSet<Purchase> Purchases => Set<Purchase>();
+    public DbSet<PurchaseLine> PurchaseLines => Set<PurchaseLine>();
+    public DbSet<StockMinimum> Minimums => Set<StockMinimum>();
+    public DbSet<StockMovement> Movements => Set<StockMovement>();
+
+    // Call inside a transaction. Stock writers in other branches can proceed independently.
+    public Task<Branch?> LockBranchAsync(int branchId) => Branches
+        .FromSqlInterpolated($"SELECT * FROM [organization].[Branches] WITH (XLOCK, ROWLOCK) WHERE Id = {branchId}")
+        .SingleOrDefaultAsync();
+
+    public Task<Branch?> ReadInventoryBranchAsync(int branchId) => Branches
+        .FromSqlInterpolated($"SELECT * FROM [organization].[Branches] WITH (HOLDLOCK, ROWLOCK) WHERE Id = {branchId}")
+        .AsNoTracking().SingleOrDefaultAsync();
 
     protected override void OnModelCreating(ModelBuilder model)
     {
         base.OnModelCreating(model);
         model.HasDefaultSchema("identity");
+        InventoryModel.Configure(model);
         var branch = model.Entity<Branch>();
         branch.ToTable("Branches", "organization");
         branch.Property(x => x.Name).HasMaxLength(100);
