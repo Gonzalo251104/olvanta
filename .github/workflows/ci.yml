@@ -1,0 +1,85 @@
+name: Olvanta CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: olvanta-api/global.json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: olvanta-web/.nvmrc
+          cache: npm
+          cache-dependency-path: olvanta-web/package-lock.json
+
+      - name: Validate the API
+        working-directory: olvanta-api
+        run: |
+          dotnet restore --locked-mode
+          dotnet format --verify-no-changes --no-restore
+          dotnet build -c Release --no-restore
+          dotnet test -c Release --no-build
+
+      - name: Validate the web
+        working-directory: olvanta-web
+        run: |
+          npm ci
+          npm run lint
+          npm run check:api
+          npm test
+          npm run build
+          npx --no-install playwright install --with-deps chromium
+
+      - name: Start the stack against a clean SQL Server
+        shell: pwsh
+        run: ./olvanta-api/scripts/Start-Local.ps1
+
+      - name: Verify the OpenAPI contract across both components
+        shell: bash
+        run: |
+          curl --fail --silent --show-error http://127.0.0.1:5180/openapi/v1.json | jq -S . > "$RUNNER_TEMP/served.json"
+          jq -S . olvanta-api/contracts/olvanta-v1.json | diff -u - "$RUNNER_TEMP/served.json"
+          cmp olvanta-api/contracts/olvanta-v1.json olvanta-web/contracts/olvanta-v1.json
+
+      - name: Run browser and security tests
+        working-directory: olvanta-web
+        shell: pwsh
+        run: |
+          $setting = Select-String -LiteralPath '../olvanta-api/deploy/.env' -Pattern '^OLVANTA_ADMIN_PASSWORD='
+          $password = ($setting.Line -split '=', 2)[1]
+          if (!$password) { throw 'The test stack did not generate an administrator password.' }
+          Write-Output "::add-mask::$password"
+          $env:OLVANTA_TEST_ADMIN_PASSWORD = $password
+          npm run test:e2e
+          exit $LASTEXITCODE
+
+      - name: Verify database outage and recovery
+        working-directory: olvanta-api/deploy
+        shell: bash
+        run: |
+          docker compose stop sql
+          test "$(curl --silent --show-error --max-time 15 --output /dev/null --write-out '%{http_code}' http://127.0.0.1:5180/health/live)" = 200
+          test "$(curl --silent --show-error --max-time 15 --output /dev/null --write-out '%{http_code}' http://127.0.0.1:5180/health/ready)" = 503
+          test "$(curl --silent --show-error --max-time 15 --output "$RUNNER_TEMP/status.json" --write-out '%{http_code}' http://127.0.0.1:5180/api/v1/system/status)" = 503
+          jq -e '.status == "degraded" and .database == "unavailable"' "$RUNNER_TEMP/status.json"
+          docker compose start sql
+          pwsh -File ../scripts/Test-Local.ps1
+
+      - name: Inspect service status on failure
+        if: failure()
+        working-directory: olvanta-api/deploy
+        run: |
+          if [ -f .env ]; then docker compose ps -a; fi

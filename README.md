@@ -17,4 +17,8 @@ Con Docker Compose y PowerShell, ejecute desde la raíz:
 
 Abra [Olvanta](http://127.0.0.1:5180). El usuario inicial es admin. Su contraseña de aprovisionamiento se genera localmente en el archivo olvanta-api/deploy/.env, excluido de Git.
 
-Los flujos de GitHub Actions incluidos en cada componente corresponden a su estructura anterior de repositorios independientes. Los comandos de verificación local están en el README de cada componente.
+## Integración continua
+
+GitHub Actions usa el mismo checkout para ambos componentes y ejecuta la [CI integrada](.github/workflows/ci.yml) en pull requests y en cambios de `main` o `develop`. Compila y prueba cada componente, arranca Docker Compose con un SQL Server vacío, coteja el contrato OpenAPI, ejecuta las pruebas de navegador y comprueba la recuperación tras una interrupción de la base. Los README de API y web incluyen los comandos de verificación local.
+
+El [plan original](olvanta-api/docs/plan.md) registra la estructura inicial. La API y la web se mantienen desde este repositorio único.

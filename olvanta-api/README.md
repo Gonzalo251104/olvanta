@@ -4,7 +4,7 @@ Backend de operaciones comerciales en ASP.NET Core y SQL Server.
 
 ## Arranque local
 
-Coloque `olvanta-api` y `olvanta-web` como repositorios hermanos con las revisiones compatibles de la API y la web (0.2.0 para esta fase). Utilice Docker con contenedores Linux en x86-64, Docker Compose y PowerShell. SQL Server necesita al menos 2 GB de memoria disponibles para su contenedor. Desde la carpeta que contiene ambos repositorios, ejecute:
+Clone el repositorio de Olvanta. Utilice Docker con contenedores Linux en x86-64, Docker Compose y PowerShell. SQL Server necesita al menos 2 GB de memoria disponibles para su contenedor. Desde la raíz del repositorio ejecute:
 
 ```powershell
 ./olvanta-api/scripts/Start-Local.ps1
@@ -34,7 +34,7 @@ dotnet test -c Release --no-build
 
 Para depurar fuera de Docker defina `ConnectionStrings__Olvanta` con una conexión a su base local y ejecute `dotnet run --project src/Olvanta.Api --urls http://127.0.0.1:5080`. El proxy de Vite usa ese puerto. Para HTTP local configure `Security__LocalHttp=true`. Aplique primero las migraciones con una conexión de aprovisionamiento y `dotnet run --project src/Olvanta.Api -- --initialize`, proporcionando `Bootstrap__AdminPassword` para una base nueva.
 
-La CI valida el contrato servido y la integración con el repositorio hermano. Al publicar en GitHub, use los nombres `olvanta-api` y `olvanta-web` bajo el mismo propietario. La variable `OLVANTA_WEB_REF` permite fijar el commit web compatible (por defecto, `develop`). Para un repositorio hermano privado, configure `OLVANTA_READ_TOKEN` con lectura de contenidos.
+La [CI integrada](../.github/workflows/ci.yml) valida el contrato servido y la comunicación con la web del mismo commit.
 
 ### Verificación de la fase 1
 
