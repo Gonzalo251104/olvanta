@@ -79,8 +79,8 @@ public sealed class MastersController(OlvantaDbContext db, SessionAccess access)
         if (!record.Version.SequenceEqual(input.Version)) return Conflict();
         if (kind == "products" && input.Unit?.Trim() != record.Unit &&
             (await db.PurchaseLines.AnyAsync(x => x.ProductId == id) || await db.Movements.AnyAsync(x => x.ProductId == id) ||
-            await db.Minimums.AnyAsync(x => x.ProductId == id)))
-            return Problem(statusCode: 409, detail: "El producto ya tiene inventario registrado en su unidad base.");
+            await db.Minimums.AnyAsync(x => x.ProductId == id) || await db.Set<SaleLine>().AnyAsync(x => x.ItemId == id)))
+            return Problem(statusCode: 409, detail: "El producto ya tiene operaciones registradas en su unidad base.");
         input.Apply(record);
         db.Entry(record).Property(x => x.Name).IsModified = true;
         Audit(record, "master.updated");

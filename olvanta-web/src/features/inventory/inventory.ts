@@ -5,6 +5,10 @@ export const inventoryMoves = '/api/v1/branches/{branchId}/inventory/movements'
 export type Inventory = Models['InventoryView']
 export type Branch = Models['BranchAccess']
 export const movementNames: Record<string, string> = {
+  'sale-confirm': 'Reserva de venta',
+  'sale-cancel': 'Liberación por anulación',
+  'sale-dispatch': 'Despacho de venta',
+  'sale-return': 'Devolución de venta',
   receipt: 'Recepción de compra',
   entry: 'Entrada',
   issue: 'Salida',

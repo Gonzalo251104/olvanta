@@ -8,17 +8,25 @@ public static class AccessRules
     public const string InventoryWrite = "inventory.write";
     public const string InventoryAdjust = "inventory.adjust";
     public const string Reserve = "inventory.reserve";
-    public static readonly string[] All = [Read, Write, InventoryRead, InventoryWrite, InventoryAdjust, Reserve];
+    public const string SalesRead = "sales.read";
+    public const string Sell = "sales.write";
+    public const string Discount = "sales.discount";
+    public const string Dispatch = "sales.dispatch";
+    public const string Returns = "sales.return";
+    public const string Cash = "cash.write";
+    public const string CashRead = "cash.read";
+    public static readonly string[] All = [Read, Write, InventoryRead, InventoryWrite, InventoryAdjust, Reserve,
+        SalesRead, Sell, Discount, Dispatch, Returns, Cash, CashRead];
 
     public static readonly IReadOnlyDictionary<string, string[]> Roles = new Dictionary<string, string[]>
     {
         ["supervisor"] = All,
-        ["salesperson"] = [Read, Write, InventoryRead, Reserve],
-        ["warehouse"] = [Read, InventoryRead, InventoryWrite, Reserve],
-        ["cashier"] = [Read],
+        ["salesperson"] = [Read, Write, InventoryRead, Reserve, SalesRead, Sell],
+        ["warehouse"] = [Read, InventoryRead, InventoryWrite, Reserve, SalesRead, Dispatch],
+        ["cashier"] = [Read, SalesRead, Cash, CashRead],
         ["rentals"] = [Read],
         ["parking"] = [Read],
         ["billing"] = [Read],
-        ["auditor"] = [Read, InventoryRead]
+        ["auditor"] = [Read, InventoryRead, SalesRead, CashRead]
     };
 }

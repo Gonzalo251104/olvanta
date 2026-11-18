@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.4.0
+
+Ventas al contado y crédito con reservas, despacho, devoluciones y cuentas por cobrar. Diario de cobros y caja por sucursal con operaciones idempotentes y cierre por arqueo.
+
 ## 0.3.0
 
 Compras con recepción parcial, existencias y mínimos por almacén, movimientos por lote, reservas concurrentes, valoración al promedio ponderado y auditoría del kardex.

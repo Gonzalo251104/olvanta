@@ -122,6 +122,21 @@ button.quiet { border-color: #8b7286; color: inherit; background: transparent; w
 }
 .panel .section-head { margin-bottom: .75rem; }
 .stock-tabs { margin-bottom: 1.25rem; }
+.trade-layout { display: grid; grid-template-columns: minmax(14rem, 1fr) minmax(0, 2.6fr); gap: 1rem; align-items: start; }
+.trade-list, .trade-history { padding-inline-start: 1.2rem; }
+.trade-list li { margin-block: .7rem; }
+.trade-list small { display: block; }
+.trade-history li { padding-block: .4rem; overflow-wrap: anywhere; }
+.trade-action { margin-block: 1rem; max-width: 26rem; }
+.trade-print h3 { margin-top: 1.1rem; }
+@media (max-width: 770px) { .trade-layout { grid-template-columns: minmax(0, 1fr); } }
+@media print {
+  .masthead, .work-nav, .screen-only, [role="alert"] { display: none !important; }
+  .trade-layout, .stock-layout { display: block; }
+  .frame.content { padding: 0; width: 100%; }
+  .trade-print { background: white; border: 0; color: black; }
+  .trade-print .table-wrap { overflow: visible; }
+}
 .stock-layout { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1rem; align-items: start; }
 .stock-layout h2 { margin-bottom: 1rem; }
 .stock-order { border-top: 1px solid var(--rule); padding-block: .75rem; }

@@ -48,5 +48,6 @@ El 17 de noviembre de 2026 se construyeron las imágenes con restauración bloqu
 - [Alcance, backlog y criterios de aceptación](docs/business/backlog.md)
 - [Glosario y reglas del negocio](docs/business/glossary.md)
 - [Decisiones de arquitectura, identidad y contrato](docs/adr)
-- [Contrato OpenAPI 0.3.0](contracts/olvanta-v1.json)
+- [Guía de ventas y caja](docs/business/sales-and-cash.md)
+- [Contrato OpenAPI 0.4.0](contracts/olvanta-v1.json)
 - [Flujo de contribución](CONTRIBUTING.md)
