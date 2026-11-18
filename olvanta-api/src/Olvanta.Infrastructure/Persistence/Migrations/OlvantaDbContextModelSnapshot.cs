@@ -263,6 +263,42 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.ToTable("CashSessions", "commercial");
                 });
 
+            modelBuilder.Entity("Olvanta.Domain.CommercialUnit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Features")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BranchId", "Code")
+                        .IsUnique();
+
+                    b.ToTable("Units", "rentals");
+                });
+
             modelBuilder.Entity("Olvanta.Domain.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -506,6 +542,80 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.ToTable("Documents", "billing");
                 });
 
+            modelBuilder.Entity("Olvanta.Domain.LeaseContract", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Conditions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Deposit")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
+                    b.Property<int>("DueDay")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("End")
+                        .HasColumnType("date");
+
+                    b.Property<string>("EndReason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly?>("EndedOn")
+                        .HasColumnType("date");
+
+                    b.Property<decimal>("MonthlyRent")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
+                    b.Property<int?>("PreviousId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("Start")
+                        .HasColumnType("date");
+
+                    b.Property<decimal>("TaxRate")
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)");
+
+                    b.Property<string>("Tenant")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UnitId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("PreviousId")
+                        .IsUnique()
+                        .HasFilter("[PreviousId] IS NOT NULL");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("UnitId", "Start", "End");
+
+                    b.ToTable("Contracts", "rentals");
+                });
+
             modelBuilder.Entity("Olvanta.Domain.MasterRecord", b =>
                 {
                     b.Property<int>("Id")
@@ -663,6 +773,58 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.ToTable("PurchaseLines", "inventory");
                 });
 
+            modelBuilder.Entity("Olvanta.Domain.RentCharge", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(16, 2)
+                        .HasColumnType("decimal(16,2)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("Due")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("From")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(12)
+                        .HasColumnType("nvarchar(12)");
+
+                    b.Property<int>("LeaseId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Reference")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
+
+                    b.Property<int>("SaleId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("Through")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SaleId")
+                        .IsUnique();
+
+                    b.HasIndex("LeaseId", "Kind", "Reference")
+                        .IsUnique();
+
+                    b.ToTable("Charges", "rentals");
+                });
+
             modelBuilder.Entity("Olvanta.Domain.Sale", b =>
                 {
                     b.Property<int>("Id")
@@ -803,6 +965,9 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.Property<int?>("CashSessionId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("DepositLeaseId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Kind")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -844,6 +1009,8 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CashSessionId");
+
+                    b.HasIndex("DepositLeaseId");
 
                     b.HasIndex("LineId");
 
@@ -1154,6 +1321,15 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Olvanta.Domain.CommercialUnit", b =>
+                {
+                    b.HasOne("Olvanta.Domain.Branch", null)
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Olvanta.Domain.DocumentSeries", b =>
                 {
                     b.HasOne("Olvanta.Domain.Establishment", null)
@@ -1201,6 +1377,32 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Olvanta.Domain.LeaseContract", b =>
+                {
+                    b.HasOne("Olvanta.Domain.MasterRecord", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.LeaseContract", null)
+                        .WithOne()
+                        .HasForeignKey("Olvanta.Domain.LeaseContract", "PreviousId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Olvanta.Domain.MasterRecord", null)
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.CommercialUnit", null)
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Olvanta.Domain.MasterRecord", b =>
                 {
                     b.HasOne("Olvanta.Domain.Branch", null)
@@ -1238,6 +1440,23 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                         .HasForeignKey("PurchaseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.RentCharge", b =>
+                {
+                    b.HasOne("Olvanta.Domain.LeaseContract", null)
+                        .WithMany()
+                        .HasForeignKey("LeaseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.Sale", "Sale")
+                        .WithOne()
+                        .HasForeignKey("Olvanta.Domain.RentCharge", "SaleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Sale");
                 });
 
             modelBuilder.Entity("Olvanta.Domain.Sale", b =>
@@ -1286,6 +1505,11 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.HasOne("Olvanta.Domain.CashSession", null)
                         .WithMany()
                         .HasForeignKey("CashSessionId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Olvanta.Domain.LeaseContract", null)
+                        .WithMany()
+                        .HasForeignKey("DepositLeaseId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Olvanta.Domain.SaleLine", null)

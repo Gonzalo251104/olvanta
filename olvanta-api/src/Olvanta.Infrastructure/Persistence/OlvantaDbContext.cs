@@ -19,6 +19,9 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
     public DbSet<StockMinimum> Minimums => Set<StockMinimum>();
     public DbSet<StockMovement> Movements => Set<StockMovement>();
     public DbSet<Sale> Sales => Set<Sale>();
+    public DbSet<CommercialUnit> Units => Set<CommercialUnit>();
+    public DbSet<LeaseContract> Leases => Set<LeaseContract>();
+    public DbSet<RentCharge> RentCharges => Set<RentCharge>();
     public DbSet<CashSession> CashSessions => Set<CashSession>();
     public DbSet<SalesEvent> SalesEvents => Set<SalesEvent>();
     public DbSet<FiscalDocument> FiscalDocuments => Set<FiscalDocument>();
@@ -40,6 +43,7 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
         InventoryModel.Configure(model);
         SalesModel.Configure(model);
         BillingModel.Configure(model);
+        RentalModel.Configure(model);
         var branch = model.Entity<Branch>();
         branch.ToTable("Branches", "organization");
         branch.Property(x => x.Name).HasMaxLength(100);

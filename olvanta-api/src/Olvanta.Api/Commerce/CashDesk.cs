@@ -24,6 +24,7 @@ internal sealed class CashDesk(OlvantaDbContext db)
         }
         if (session == null || session.Id != input.CashSessionId) throw new TradeException("La sesión de caja indicada ya no está abierta.");
         action.CashSessionId = session.Id;
+        if (sale != null && sale.Currency != session.Currency) throw new TradeException("La cuenta y la caja deben tener la misma moneda.");
         action.Amount = amount;
         var expected = session.Opening + await db.SalesEvents.Where(x => x.CashSessionId == session.Id).SumAsync(x => x.CashDelta);
         if (input.Kind == "close")
@@ -52,6 +53,13 @@ internal sealed class CashDesk(OlvantaDbContext db)
                 }
                 action.Method = input.Method;
                 if (input.Method == "cash") action.CashDelta = input.Kind == "pay" ? amount : -amount;
+                break;
+            case "deposit-in":
+            case "deposit-out":
+                if (action.DepositLeaseId == null || input.Method is not ("cash" or "card" or "transfer"))
+                    throw new TradeException("Seleccione el contrato y el medio de pago.", 400);
+                action.Method = input.Method;
+                if (input.Method == "cash") action.CashDelta = input.Kind == "deposit-in" ? amount : -amount;
                 break;
             case "cash-in":
             case "cash-out":

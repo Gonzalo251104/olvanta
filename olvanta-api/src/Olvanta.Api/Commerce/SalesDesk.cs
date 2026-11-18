@@ -64,6 +64,8 @@ internal sealed class SalesDesk(OlvantaDbContext db)
 
     public async Task ApplyAsync(Sale sale, TradeInput input, SalesEvent action, List<SalesEvent> history)
     {
+        if (await db.RentCharges.AnyAsync(x => x.SaleId == sale.Id))
+            throw new TradeException("La cuenta corresponde a un cargo de alquiler. Gestione el contrato en Alquileres.");
         var fulfillment = new SaleFulfillment(db);
         var total = sale.Lines.Sum(x => x.Total);
         switch (input.Kind)

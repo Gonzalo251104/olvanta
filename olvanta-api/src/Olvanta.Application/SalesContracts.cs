@@ -22,7 +22,7 @@ public sealed record TradeEntry(long Id, string Kind, DateTimeOffset Time, strin
 public sealed record SaleLineDetail(int Id, int ItemId, string Description, string Unit, decimal Quantity,
     decimal Returnable, decimal Price, decimal Discount, decimal TaxRate, decimal Tax, decimal Total, string? Warehouse, string Lot);
 public sealed record SaleDetail(int Id, string Customer, string Currency, string Terms, DateOnly? DueDate, string Stage,
-    DateTimeOffset Created, decimal Total, decimal Balance, List<SaleLineDetail> Lines, List<TradeEntry> History);
+    DateTimeOffset Created, decimal Total, decimal Balance, List<SaleLineDetail> Lines, List<TradeEntry> History, int? LeaseId = null);
 public sealed record CashDetail(int Id, string Currency, DateTimeOffset Opened, DateTimeOffset? Closed, decimal Opening,
     decimal Expected, decimal? Counted, decimal? Difference, List<TradeEntry> History);
 

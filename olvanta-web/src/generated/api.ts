@@ -1378,6 +1378,321 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/branches/{branchId}/rentals": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    date?: string;
+                };
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["RentalDeskView"];
+                        "application/json": components["schemas"]["RentalDeskView"];
+                        "text/json": components["schemas"]["RentalDeskView"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/rentals/units": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["UnitInput"];
+                    "text/json": components["schemas"]["UnitInput"];
+                    "application/*+json": components["schemas"]["UnitInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/rentals/contracts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["LeaseInput"];
+                    "text/json": components["schemas"]["LeaseInput"];
+                    "application/*+json": components["schemas"]["LeaseInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/rentals/contracts/{id}/end": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["EndLeaseInput"];
+                    "text/json": components["schemas"]["EndLeaseInput"];
+                    "application/*+json": components["schemas"]["EndLeaseInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/rentals/contracts/{id}/months": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["RentMonthInput"];
+                    "text/json": components["schemas"]["RentMonthInput"];
+                    "application/*+json": components["schemas"]["RentMonthInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/rentals/contracts/{id}/extras": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["ExtraChargeInput"];
+                    "text/json": components["schemas"]["ExtraChargeInput"];
+                    "application/*+json": components["schemas"]["ExtraChargeInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/rentals/contracts/{id}/deposits": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["DepositInput"];
+                    "text/json": components["schemas"]["DepositInput"];
+                    "application/*+json": components["schemas"]["DepositInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/branches/{branchId}/sales/catalog": {
         parameters: {
             query?: never;
@@ -1739,6 +2054,44 @@ export interface components {
         CsrfToken: {
             token: string;
         };
+        DepositEntry: {
+            /** Format: int64 */
+            id: number | string;
+            /** Format: int32 */
+            leaseId: number | string;
+            kind: string;
+            /** Format: double */
+            amount: number | string;
+            method: string;
+            actor: string;
+            /** Format: date-time */
+            time: string;
+            note: string;
+        };
+        DepositInput: {
+            /** Format: uuid */
+            requestId: string;
+            /** Format: int32 */
+            sessionId: number | string;
+            kind: string;
+            method: string;
+            /** Format: double */
+            amount: number | string;
+            note: string;
+        };
+        EndLeaseInput: {
+            /** Format: date */
+            date: string;
+            reason: string;
+        };
+        ExtraChargeInput: {
+            reference: string;
+            reason: string;
+            /** Format: date */
+            due: string;
+            /** Format: double */
+            amount: number | string;
+        };
         FiscalInput: {
             /** Format: uuid */
             requestId: string;
@@ -1837,6 +2190,59 @@ export interface components {
             purchases: components["schemas"]["PurchaseView"][];
             balances: components["schemas"]["BalanceView"][];
             reservations: components["schemas"]["OpenReservation"][];
+        };
+        LeaseInput: {
+            /** Format: int32 */
+            unitId: number | string;
+            /** Format: int32 */
+            customerId: number | string;
+            /** Format: int32 */
+            serviceId: number | string;
+            /** Format: date */
+            start: string;
+            /** Format: date */
+            end: string;
+            /** Format: double */
+            monthlyRent: number | string;
+            /** Format: double */
+            deposit: number | string;
+            /** Format: int32 */
+            dueDay: number | string;
+            conditions: string;
+            /** Format: int32 */
+            previousId?: null | number | string;
+        };
+        LeaseView: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            unitId: number | string;
+            /** Format: int32 */
+            customerId: number | string;
+            /** Format: int32 */
+            serviceId: number | string;
+            /** Format: int32 */
+            previousId: null | number | string;
+            tenant: string;
+            currency: string;
+            /** Format: double */
+            taxRate: number | string;
+            /** Format: date */
+            start: string;
+            /** Format: date */
+            end: string;
+            /** Format: date */
+            endedOn: null | string;
+            endReason: null | string;
+            /** Format: int32 */
+            dueDay: number | string;
+            /** Format: double */
+            monthlyRent: number | string;
+            /** Format: double */
+            deposit: number | string;
+            /** Format: double */
+            held: number | string;
+            conditions: string;
         };
         LoginRequest: {
             userName: string;
@@ -2048,6 +2454,53 @@ export interface components {
             warehouseId: null | number | string;
             lot: null | string;
         };
+        RentalDeskView: {
+            /** Format: date */
+            today: string;
+            units: components["schemas"]["RentalUnitView"][];
+            contracts: components["schemas"]["LeaseView"][];
+            charges: components["schemas"]["RentChargeView"][];
+            customers: components["schemas"]["InventoryOption"][];
+            services: components["schemas"]["InventoryOption"][];
+            /** Format: int32 */
+            cashSessionId: null | number | string;
+            cashCurrency: null | string;
+            deposits: components["schemas"]["DepositEntry"][];
+        };
+        RentalUnitView: {
+            /** Format: int32 */
+            id: number | string;
+            code: string;
+            name: string;
+            address: string;
+            features: string;
+            occupied: boolean;
+        };
+        RentChargeView: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            leaseId: number | string;
+            /** Format: int32 */
+            saleId: number | string;
+            kind: string;
+            reference: string;
+            description: string;
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            through: string;
+            /** Format: date */
+            due: string;
+            /** Format: double */
+            amount: number | string;
+            /** Format: double */
+            balance: number | string;
+        };
+        RentMonthInput: {
+            /** Format: date */
+            month: string;
+        };
         ResetInput: {
             newPassword: string;
         };
@@ -2068,6 +2521,8 @@ export interface components {
             balance: number | string;
             lines: components["schemas"]["SaleLineDetail"][];
             history: components["schemas"]["TradeEntry"][];
+            /** Format: int32 */
+            leaseId?: null | number | string;
         };
         SaleItem: {
             /** Format: int32 */
@@ -2213,6 +2668,12 @@ export interface components {
             saleId: null | number | string;
             /** Format: int32 */
             cashSessionId: null | number | string;
+        };
+        UnitInput: {
+            code: string;
+            name: string;
+            address: string;
+            features: string;
         };
         UserInput: {
             userName: string;

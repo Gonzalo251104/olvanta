@@ -13,8 +13,17 @@ export function Journal({ entries, currency }: { entries: Models['TradeEntry'][]
           {e.saleId && ' · Venta #' + e.saleId}
           {e.lineId && ' · Partida #' + e.lineId}
           {Number(e.quantity) > 0 && ' · Cant. ' + e.quantity}
-          {['pay', 'refund', 'return', 'open', 'close', 'cash-in', 'cash-out'].includes(e.kind) &&
-            ' · ' + money(e.amount, currency)}
+          {[
+            'pay',
+            'refund',
+            'return',
+            'open',
+            'close',
+            'cash-in',
+            'cash-out',
+            'deposit-in',
+            'deposit-out',
+          ].includes(e.kind) && ' · ' + money(e.amount, currency)}
           {e.method && ' · ' + methods[e.method]}
           {e.returnId && ' · Devolución #' + e.returnId}
           {e.kind === 'return' && ' · #' + e.id}
@@ -49,7 +58,8 @@ export function SaleDetail({
     [
       'dispatch',
       'Despachar',
-      can('sales.dispatch') &&
+      !sale.leaseId &&
+        can('sales.dispatch') &&
         sale.stage === 'confirmed' &&
         (sale.terms === 'credit' || Number(sale.balance) === 0),
     ],
@@ -62,7 +72,10 @@ export function SaleDetail({
     [
       'cancel',
       'Anular',
-      can('sales.write') && !collected && ['quote', 'order', 'confirmed'].includes(sale.stage),
+      !sale.leaseId &&
+        can('sales.write') &&
+        !collected &&
+        ['quote', 'order', 'confirmed'].includes(sale.stage),
     ],
   ]
   const options = actions.filter((x) => x[2])

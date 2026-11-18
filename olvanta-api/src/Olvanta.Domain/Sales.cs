@@ -45,6 +45,7 @@ public sealed class CashSession
 // One immutable entry for each accepted business command, including each collection or refund.
 public sealed class SalesEvent
 {
+    public int? DepositLeaseId { get; set; }
     public long Id { get; set; }
     public Guid RequestId { get; set; }
     public required string RequestHash { get; set; }

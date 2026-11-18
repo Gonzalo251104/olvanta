@@ -148,6 +148,13 @@ button.quiet { border-color: #8b7286; color: inherit; background: transparent; w
 .stock-low { color: #873829; font-weight: 650; }
 .table-wrap summary { cursor: pointer; font-size: .85rem; }
 .account-panel { max-width: 37rem; }
+.rent-account { display: grid; grid-template-columns: 1.5fr 1fr; gap: 1rem; border-block: 1px solid var(--rule); padding-block: 1rem; }
+.rent-account dl { margin: 0; }
+.rent-account dt { color: var(--muted); font-size: .85rem; }
+.rent-account dd { margin: .15rem 0 .65rem; font-weight: 650; }
+.rent-form { max-width: 38rem; }
+.rent-period { grid-template-columns: minmax(9rem, 14rem) auto; align-items: end; justify-content: start; }
+@media (max-width: 600px) { .rent-account, .rent-period { grid-template-columns: 1fr; } }
 .account-panel h1 { margin-bottom: 1.5rem; }
 .fields { display: grid; align-content: start; gap: 1rem; }
 .fields label, .filters label { display: grid; gap: .38rem; font-weight: 590; font-size: .85rem; }
