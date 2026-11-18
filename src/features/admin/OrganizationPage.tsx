@@ -73,7 +73,7 @@ export function OrganizationPage() {
   if (!org.data || !branch) return <p>Cargando organización…</p>
   const sites = org.data.establishments.filter((s) => s.branchId === branch.id)
   return (
-    <>
+    <div className="organization-grid">
       {save.error && <p role="alert">{save.error.message}</p>}
       {save.isSuccess && <p role="status">Configuración guardada.</p>}
       <form className="panel fields" name="company" onSubmit={submit}>
@@ -93,7 +93,13 @@ export function OrganizationPage() {
         </label>
         <button disabled={save.isPending}>Guardar empresa</button>
       </form>
-      <section className="panel fields">
+      <form
+        key={branch.id + '-defaults'}
+        name="defaults"
+        className="panel fields branch-settings"
+        onSubmit={submit}
+      >
+        <h2>Valores iniciales del catálogo</h2>
         <label>
           Sucursal a configurar
           <select value={branch.id} onChange={(e) => setSelected(Number(e.target.value))}>
@@ -104,9 +110,6 @@ export function OrganizationPage() {
             ))}
           </select>
         </label>
-      </section>
-      <form key={branch.id + '-defaults'} name="defaults" className="panel fields" onSubmit={submit}>
-        <h2>Valores iniciales del catálogo</h2>
         <label>
           Moneda
           <select name="currency" defaultValue={branch.currency}>
@@ -191,6 +194,6 @@ export function OrganizationPage() {
           <p>Cree un establecimiento para asignarle series.</p>
         )}
       </form>
-    </>
+    </div>
   )
 }

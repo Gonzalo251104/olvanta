@@ -54,7 +54,7 @@ export function MasterEditor({
   })
   return (
     <form
-      className="panel fields"
+      className="panel fields master-editor"
       onSubmit={(e) => {
         e.preventDefault()
         save.mutate(new FormData(e.currentTarget))

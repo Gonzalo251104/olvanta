@@ -142,12 +142,14 @@ export function AdminPage() {
   })
   return (
     <>
-      <h1>Administración</h1>
+      <div className="section-head">
+        <h1>Administración</h1>
+      </div>
       <div className="tabs" aria-label="Secciones">
         {['Usuarios', 'Sucursales', 'Organización', 'Auditoría'].map((t) => (
           <button
             key={t}
-            className={tab === t ? '' : 'secondary'}
+            aria-pressed={tab === t}
             onClick={() => {
               setTab(t)
               setNotice('')

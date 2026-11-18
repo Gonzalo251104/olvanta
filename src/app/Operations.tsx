@@ -7,15 +7,7 @@ import type { Kind } from '../shared/workspace'
 import { MasterPage } from '../features/masters/MasterPage'
 import { AdminPage } from '../features/admin/AdminPage'
 import { SystemPage } from '../features/system/SystemPage'
-
-function Brand() {
-  return (
-    <div className="brand">
-      <span aria-hidden="true" className="brand-mark" />
-      Olvanta
-    </div>
-  )
-}
+import { Brand } from './Brand'
 
 function Login({ entered }: { entered: () => void }) {
   const login = useMutation({
@@ -27,15 +19,17 @@ function Login({ entered }: { entered: () => void }) {
     onSuccess: entered,
   })
   return (
-    <>
-      <header className="masthead">
-        <div className="frame">
+    <main className="login">
+      <div className="login-cover">
+        <img src="/seleccion-aceitunas.webp" alt="" fetchPriority="high" />
+        <div className="cover-brand">
           <Brand />
+          <p>Gestión comercial y operativa</p>
         </div>
-      </header>
-      <main className="frame login">
+      </div>
+      <div className="login-body">
         <form
-          className="panel fields"
+          className="login-form fields"
           onSubmit={(e) => {
             e.preventDefault()
             login.mutate(new FormData(e.currentTarget))
@@ -51,11 +45,13 @@ function Login({ entered }: { entered: () => void }) {
             <input name="password" type="password" autoComplete="current-password" required />
           </label>
           {login.error && <p role="alert">{login.error.message}</p>}
-          <button disabled={login.isPending}>Ingresar</button>
-          <Link to="/estado">Estado del sistema</Link>
+          <button disabled={login.isPending}>{login.isPending ? 'Ingresando…' : 'Ingresar'}</button>
         </form>
-      </main>
-    </>
+        <Link className="login-status" to="/estado">
+          Estado del sistema <span aria-hidden="true">↗</span>
+        </Link>
+      </div>
+    </main>
   )
 }
 
@@ -70,7 +66,7 @@ function PasswordForm() {
     },
   })
   return (
-    <section className="panel">
+    <section className="panel account-panel">
       <h1>Mi cuenta</h1>
       <form
         className="fields"
@@ -138,70 +134,95 @@ function Workspace() {
     )
   if (!session.data) return <Login entered={() => void session.refetch()} />
   const user = session.data
-  const branch = user.branches.find((b) => b.id === selected) ?? user.branches[0]
+  const branch = user.branches.find((b) => Number(b.id) === selected) ?? user.branches[0]
   return (
     <>
       <header className="masthead">
         <div className="frame bar">
-          <Brand />
-          <span>{user.userName}</span>
-          <button className="quiet" disabled={logout.isPending} onClick={() => logout.mutate()}>
-            Cerrar sesión
-          </button>
+          <Link to="/" className="brand-link">
+            <Brand />
+          </Link>
+          {branch && (
+            <label className="branch-control">
+              <span>Sucursal activa</span>
+              <select value={branch.id} onChange={(e) => setSelected(Number(e.target.value))}>
+                {user.branches.map((b) => (
+                  <option key={b.id} value={b.id}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
+          <div className="account-tools">
+            <NavLink className="account-link" to="/cuenta">
+              <strong>{user.userName}</strong>
+              <small>{branch ? 'Mi cuenta · ' + roles[branch.role] : 'Mi cuenta'}</small>
+            </NavLink>
+            <button className="quiet" disabled={logout.isPending} onClick={() => logout.mutate()}>
+              Cerrar sesión
+            </button>
+          </div>
         </div>
       </header>
-      <div className="frame workspace">
-        <aside>
-          <label>
-            Sucursal activa
-            <select value={branch?.id ?? ''} onChange={(e) => setSelected(Number(e.target.value))}>
-              {user.branches.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.name}
-                </option>
-              ))}
-            </select>
-          </label>
-          {branch && <small>{roles[branch.role]}</small>}
-          <nav aria-label="Operaciones">
-            {branch &&
-              Object.entries(kinds).map(([key, label]) => (
-                <NavLink key={key} to={'/maestros/' + key}>
-                  {label}
-                </NavLink>
-              ))}
-            {user.administrator && <NavLink to="/administracion">Administración</NavLink>}
-            <NavLink to="/cuenta">Mi cuenta</NavLink>
-            <Link to="/estado">Estado del sistema</Link>
-          </nav>
-        </aside>
-        <main className="content">
-          {logout.error && <p role="alert">{logout.error.message}</p>}
-          <Routes>
-            <Route path="/cuenta" element={<PasswordForm />} />
-            {user.administrator && <Route path="/administracion" element={<AdminPage />} />}
-            {branch &&
-              (Object.keys(kinds) as Kind[]).map((kind) => (
-                <Route
-                  key={kind}
-                  path={'/maestros/' + kind}
-                  element={<MasterPage key={branch.id + kind} branch={branch} kind={kind} />}
-                />
-              ))}
-            <Route
-              path="*"
-              element={
-                branch ? (
-                  <Navigate to="/maestros/customers" replace state={{ from: location.pathname }} />
-                ) : (
-                  <p>Su cuenta aún no tiene una sucursal asignada.</p>
-                )
-              }
-            />
-          </Routes>
-        </main>
-      </div>
+      <nav className="work-nav" aria-label="Operaciones">
+        <div className="frame nav-groups">
+          {branch && (
+            <>
+              <MasterLinks label="Directorio" entries={['customers', 'suppliers']} />
+              <MasterLinks label="Catálogo" entries={['products', 'services']} />
+            </>
+          )}
+          {user.administrator && (
+            <div className="nav-group">
+              <span>Gestión</span>
+              <NavLink to="/administracion">Administración</NavLink>
+            </div>
+          )}
+          <Link className="system-link" to="/estado">
+            Estado del sistema <span aria-hidden="true">↗</span>
+          </Link>
+        </div>
+      </nav>
+      <main className="frame content">
+        {logout.error && <p role="alert">{logout.error.message}</p>}
+        <Routes>
+          <Route path="/cuenta" element={<PasswordForm />} />
+          {user.administrator && <Route path="/administracion" element={<AdminPage />} />}
+          {branch &&
+            (Object.keys(kinds) as Kind[]).map((kind) => (
+              <Route
+                key={kind}
+                path={'/maestros/' + kind}
+                element={<MasterPage key={branch.id + kind} branch={branch} kind={kind} />}
+              />
+            ))}
+          <Route
+            path="*"
+            element={
+              branch ? (
+                <Navigate to="/maestros/customers" replace state={{ from: location.pathname }} />
+              ) : (
+                <p>Su cuenta aún no tiene una sucursal asignada.</p>
+              )
+            }
+          />
+        </Routes>
+      </main>
     </>
+  )
+}
+
+function MasterLinks({ label, entries }: { label: string; entries: Kind[] }) {
+  return (
+    <div className="nav-group">
+      <span>{label}</span>
+      {entries.map((entry) => (
+        <NavLink key={entry} to={'/maestros/' + entry}>
+          {kinds[entry]}
+        </NavLink>
+      ))}
+    </div>
   )
 }
 
@@ -212,10 +233,14 @@ export function Operations() {
         path="/estado"
         element={
           <>
+            <header className="masthead">
+              <div className="frame bar">
+                <Link to="/" className="brand-link" aria-label="Volver a Olvanta">
+                  <Brand />
+                </Link>
+              </div>
+            </header>
             <SystemPage />
-            <div className="frame">
-              <Link to="/">Volver a Olvanta</Link>
-            </div>
           </>
         }
       />

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { api, collection, kinds } from '../../shared/workspace'
 import type { Kind, Models } from '../../shared/workspace'
@@ -8,11 +8,17 @@ function History({
   branchId,
   kind,
   entry,
+  close,
 }: {
   branchId: number
   kind: Kind
   entry: Models['MasterView']
+  close: () => void
 }) {
+  const sheet = useRef<HTMLElement>(null)
+  useEffect(() => {
+    sheet.current?.focus()
+  }, [entry.id])
   const query = useQuery({
     queryKey: ['history', branchId, kind, entry.id, entry.data.version],
     queryFn: async () =>
@@ -42,7 +48,13 @@ function History({
     'master.imported': 'Importación',
   }
   return (
-    <section className="panel">
+    <section ref={sheet} tabIndex={-1} className="panel record-sheet" aria-label="Detalle del registro">
+      <div className="record-sheet-top">
+        <span>{d.code}</span>
+        <button className="linkbtn" onClick={close}>
+          Cerrar detalle
+        </button>
+      </div>
       <h2>{d.name}</h2>
       <dl className="details">
         {Object.entries(details)
@@ -60,14 +72,17 @@ function History({
       ) : query.error ? (
         <p role="alert">{query.error.message}</p>
       ) : (
-        <ul>
+        <ol className="history-list">
           {query.data?.map((a, i) => (
             <li key={i}>
-              {new Date(a.time).toLocaleString('es-PE')} · {a.actor} · {actions[a.action] ?? a.action} ·{' '}
-              {a.detail}
+              <strong>{actions[a.action] ?? a.action}</strong>
+              <time dateTime={a.time}>
+                {new Date(a.time).toLocaleString('es-PE')} · {a.actor}
+              </time>
+              <span>{a.detail}</span>
             </li>
           ))}
-        </ul>
+        </ol>
       )}
     </section>
   )
@@ -122,6 +137,7 @@ export function MasterPage({ branch, kind }: { branch: Models['BranchAccess']; k
   const [page, setPage] = useState(1)
   const [mode, setMode] = useState<'list' | 'edit' | 'import'>('list')
   const [selected, setSelected] = useState<Models['MasterView']>()
+  const detailTrigger = useRef<HTMLButtonElement>(null)
   const [notice, setNotice] = useState('')
   const canWrite = branch.permissions.includes('masters.write')
   const party = kind === 'customers' || kind === 'suppliers'
@@ -148,7 +164,7 @@ export function MasterPage({ branch, kind }: { branch: Models['BranchAccess']; k
   }
   return (
     <>
-      <div className="section-head">
+      <div className="section-head directory-heading">
         <h1>{kinds[kind]}</h1>
         {canWrite && mode === 'list' && (
           <div className="actions">
@@ -185,8 +201,8 @@ export function MasterPage({ branch, kind }: { branch: Models['BranchAccess']; k
           </button>
         </>
       ) : (
-        <>
-          <section className="panel">
+        <div className={selected && query.isSuccess ? 'directory with-record' : 'directory'}>
+          <section className="panel record-list">
             <div className="filters">
               <label>
                 Buscar por nombre o {party ? 'documento' : 'código'}
@@ -224,24 +240,39 @@ export function MasterPage({ branch, kind }: { branch: Models['BranchAccess']; k
             ) : (
               <>
                 <div className="table-wrap">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Nombre</th>
-                        <th>{party ? 'Documento' : 'Código'}</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
+                  <table role="table">
+                    <thead role="rowgroup">
+                      <tr role="row">
+                        <th role="columnheader" scope="col">Nombre</th>
+                        <th role="columnheader" scope="col">{party ? 'Documento' : 'Código'}</th>
+                        <th role="columnheader" scope="col">Estado</th>
+                        <th role="columnheader" scope="col">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody role="rowgroup">
                       {query.data.items.map((row) => (
-                        <tr key={row.id}>
-                          <td>{row.data.name}</td>
-                          <td>{row.data.code}</td>
-                          <td>{row.data.active ? 'Activo' : 'Inactivo'}</td>
-                          <td>
+                        <tr
+                          role="row"
+                          key={row.id}
+                          className={selected?.id === row.id ? 'selected-row' : undefined}
+                        >
+                          <td role="cell">{row.data.name}</td>
+                          <td role="cell" className="record-code">{row.data.code}</td>
+                          <td role="cell">
+                            <span className={row.data.active ? 'record-state' : 'record-state inactive'}>
+                              {row.data.active ? 'Activo' : 'Inactivo'}
+                            </span>
+                          </td>
+                          <td role="cell">
                             <div className="actions">
-                              <button className="linkbtn" onClick={() => setSelected(row)}>
+                              <button
+                                className="linkbtn"
+                                aria-pressed={selected?.id === row.id}
+                                onClick={(e) => {
+                                  detailTrigger.current = e.currentTarget
+                                  setSelected(row)
+                                }}
+                              >
                                 Ver detalle
                               </button>
                               {canWrite && (
@@ -263,10 +294,19 @@ export function MasterPage({ branch, kind }: { branch: Models['BranchAccess']; k
                     </tbody>
                   </table>
                 </div>
-                {!query.data.items.length && <p>No se encontraron registros.</p>}
+                {!query.data.items.length && (
+                  <div className="empty-records">
+                    <span aria-hidden="true" />
+                    <p>
+                      {search || state
+                        ? 'No se encontraron registros.'
+                        : 'Aún no hay registros en esta sucursal.'}
+                    </p>
+                  </div>
+                )}
                 <div className="pager">
                   <span>
-                    {query.data.total} registros · Página {page}
+                    {query.data.total} {Number(query.data.total) === 1 ? 'registro' : 'registros'} · Página {page}
                   </span>
                   <button
                     className="secondary"
@@ -292,8 +332,18 @@ export function MasterPage({ branch, kind }: { branch: Models['BranchAccess']; k
               </>
             )}
           </section>
-          {selected && query.isSuccess && <History branchId={branchId} kind={kind} entry={selected} />}
-        </>
+          {selected && query.isSuccess && (
+            <History
+              branchId={branchId}
+              kind={kind}
+              entry={selected}
+              close={() => {
+                setSelected(undefined)
+                detailTrigger.current?.focus()
+              }}
+            />
+          )}
+        </div>
       )}
     </>
   )
