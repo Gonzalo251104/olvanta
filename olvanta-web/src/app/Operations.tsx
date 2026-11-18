@@ -7,6 +7,7 @@ import type { Kind } from '../shared/workspace'
 import { MasterPage } from '../features/masters/MasterPage'
 import { InventoryPage } from '../features/inventory/InventoryPage'
 import { SalesPage } from '../features/sales/SalesPage'
+import { BillingPage } from '../features/billing/BillingPage'
 import { AdminPage } from '../features/admin/AdminPage'
 import { SystemPage } from '../features/system/SystemPage'
 import { Brand } from './Brand'
@@ -173,6 +174,12 @@ function Workspace() {
             <>
               <MasterLinks label="Directorio" entries={['customers', 'suppliers']} />
               <MasterLinks label="Catálogo" entries={['products', 'services']} />
+              {branch.permissions.includes('billing.read') && (
+                <div className="nav-group">
+                  <span>Emisión</span>
+                  <NavLink to="/facturacion">Facturación</NavLink>
+                </div>
+              )}
               {branch.permissions.includes('sales.read') && (
                 <div className="nav-group">
                   <span>Comercial</span>
@@ -202,6 +209,9 @@ function Workspace() {
         {logout.error && <p role="alert">{logout.error.message}</p>}
         <Routes>
           <Route path="/cuenta" element={<PasswordForm />} />
+          {branch?.permissions.includes('billing.read') && (
+            <Route path="/facturacion" element={<BillingPage key={branch.id} branch={branch} />} />
+          )}
           {branch?.permissions.includes('sales.read') && (
             <Route path="/ventas" element={<SalesPage key={branch.id} branch={branch} />} />
           )}

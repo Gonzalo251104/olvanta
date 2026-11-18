@@ -395,7 +395,7 @@
       "olvanta.application": {
         "type": "Project",
         "dependencies": {
-          "Olvanta.Domain": "[0.1.0, )"
+          "Olvanta.Domain": "[0.4.0, )"
         }
       },
       "olvanta.domain": {

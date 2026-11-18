@@ -21,6 +21,8 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
     public DbSet<Sale> Sales => Set<Sale>();
     public DbSet<CashSession> CashSessions => Set<CashSession>();
     public DbSet<SalesEvent> SalesEvents => Set<SalesEvent>();
+    public DbSet<FiscalDocument> FiscalDocuments => Set<FiscalDocument>();
+    public DbSet<FiscalAttempt> FiscalAttempts => Set<FiscalAttempt>();
 
     // Call inside a transaction. Stock writers in other branches can proceed independently.
     public Task<Branch?> LockBranchAsync(int branchId) => Branches
@@ -37,6 +39,7 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
         model.HasDefaultSchema("identity");
         InventoryModel.Configure(model);
         SalesModel.Configure(model);
+        BillingModel.Configure(model);
         var branch = model.Entity<Branch>();
         branch.ToTable("Branches", "organization");
         branch.Property(x => x.Name).HasMaxLength(100);

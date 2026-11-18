@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.5.0
+
+Facturación peruana en simulación, firma XMLDSig, archivos XML/ZIP/PDF, respuestas y recuperación por consulta. Incluye un adaptador SOAP para SUNAT BETA.
+
 ## 0.4.0
 
 Ventas al contado y crédito con reservas, despacho, devoluciones y cuentas por cobrar. Diario de cobros y caja por sucursal con operaciones idempotentes y cierre por arqueo.

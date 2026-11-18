@@ -15,8 +15,10 @@ public static class AccessRules
     public const string Returns = "sales.return";
     public const string Cash = "cash.write";
     public const string CashRead = "cash.read";
+    public const string BillingRead = "billing.read";
+    public const string Bill = "billing.write";
     public static readonly string[] All = [Read, Write, InventoryRead, InventoryWrite, InventoryAdjust, Reserve,
-        SalesRead, Sell, Discount, Dispatch, Returns, Cash, CashRead];
+        SalesRead, Sell, Discount, Dispatch, Returns, Cash, CashRead, BillingRead, Bill];
 
     public static readonly IReadOnlyDictionary<string, string[]> Roles = new Dictionary<string, string[]>
     {
@@ -26,7 +28,7 @@ public static class AccessRules
         ["cashier"] = [Read, SalesRead, Cash, CashRead],
         ["rentals"] = [Read],
         ["parking"] = [Read],
-        ["billing"] = [Read],
-        ["auditor"] = [Read, InventoryRead, SalesRead, CashRead]
+        ["billing"] = [Read, BillingRead, Bill],
+        ["auditor"] = [Read, InventoryRead, SalesRead, CashRead, BillingRead]
     };
 }

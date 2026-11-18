@@ -36,6 +36,10 @@ INV-01 se entrega en la versión 0.3.0. La [guía de compras e inventario](purch
 
 Las reglas de descuentos y redondeo de POS-01 se documentan en la [guía de ventas y caja](sales-and-cash.md), junto con el escenario reproducible de la entrega 0.4.0.
 
+### Evidencia de la fase 5
+
+BIL-01 incorpora emisión, firma y seguimiento en simulación con la pareja API/web 0.5.0. El envío autenticado a BETA queda pendiente por decisión del usuario. La [guía de facturación](electronic-billing.md) detalla los documentos, las pruebas de recuperación y el alcance del adaptador.
+
 ### Dependencias que se resolverán en su fase
 
 OLV-01 ampliará las conversiones para el reenvasado y las mermas. BIL-01 requiere verificar la modalidad y reglas de SUNAT vigentes para el emisor. La emisión real requiere credenciales, certificado y aceptación operativa. RNT-01 y PRK-01 requieren definir mora, prorrateo, tolerancia y redondeo. REL-01 requiere definir el alojamiento, licencias y carga de referencia.

@@ -85,6 +85,8 @@ internal sealed class SalesDesk(OlvantaDbContext db)
                 sale.Stage = "dispatched";
                 break;
             case "cancel" when sale.Stage is "quote" or "order" or "confirmed":
+                if (await db.FiscalDocuments.AnyAsync(x => x.SaleId == sale.Id && x.Active && (x.Type == "01" || x.Type == "03")))
+                    throw new TradeException("La venta tiene un comprobante vigente. Revise su estado en Facturación.");
                 if (history.Any(x => x.Kind == "pay")) throw new TradeException("La venta ya tiene cobros.");
                 if (sale.Stage == "confirmed")
                     foreach (var line in sale.Lines) await fulfillment.ApplyAsync(sale, line, action);

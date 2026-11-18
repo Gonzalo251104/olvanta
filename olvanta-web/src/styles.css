@@ -122,6 +122,8 @@ button.quiet { border-color: #8b7286; color: inherit; background: transparent; w
 }
 .panel .section-head { margin-bottom: .75rem; }
 .stock-tabs { margin-bottom: 1.25rem; }
+.fields .billing-check { display: flex; align-items: center; gap: .6rem; }
+.fields .billing-check input { width: 1.2rem; min-height: 1.2rem; }
 .trade-layout { display: grid; grid-template-columns: minmax(14rem, 1fr) minmax(0, 2.6fr); gap: 1rem; align-items: start; }
 .trade-list, .trade-history { padding-inline-start: 1.2rem; }
 .trade-list li { margin-block: .7rem; }

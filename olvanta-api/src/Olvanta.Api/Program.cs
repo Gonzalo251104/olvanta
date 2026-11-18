@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Olvanta.Api;
+using Olvanta.Api.Billing;
 using Olvanta.Api.Security;
 using Olvanta.Infrastructure.Persistence;
 
@@ -17,6 +18,15 @@ builder.Services.AddHealthChecks().AddCheck<DatabaseHealthCheck>("database", tag
 builder.Services.AddControllersWithViews(o => o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<SessionAccess>();
+builder.Services.AddSingleton<FiscalSigner>();
+builder.Services.AddScoped<FiscalIssuer>();
+builder.Services.AddScoped<FiscalDelivery>();
+builder.Services.AddScoped<SimulatedGateway>();
+builder.Services.AddHttpClient<BetaGateway>(c =>
+{
+    c.Timeout = TimeSpan.FromSeconds(25);
+    c.MaxResponseContentBufferSize = 4_000_000;
+}).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
 builder.Services.AddScoped<IAuthorizationHandler, AdminHandler>();
 builder.Services.AddAuthorization(options => options.AddPolicy("administration",
     policy => policy.RequireAuthenticatedUser().AddRequirements(new AdminRequirement())));
@@ -55,7 +65,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi("v1", options => options.AddDocumentTransformer((document, _, _) =>
 {
     document.Info.Title = "Olvanta API";
-    document.Info.Version = "0.4.0";
+    document.Info.Version = "0.5.0";
     document.Servers = [new Microsoft.OpenApi.OpenApiServer { Url = "/" }];
     document.Components ??= new OpenApiComponents();
     document.Components.SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>

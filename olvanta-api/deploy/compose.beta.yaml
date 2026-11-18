@@ -1,0 +1,5 @@
+services:
+  api:
+    environment:
+      Billing__Mode: beta
+      Billing__BetaRuc: ${OLVANTA_BETA_RUC:?Configure el RUC del emisor de pruebas}

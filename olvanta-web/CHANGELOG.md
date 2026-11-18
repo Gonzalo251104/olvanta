@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.5.0
+
+Bandeja de facturación por sucursal con preparación desde ventas, notas, resúmenes, bajas, descargas de archivos y consulta del historial de envío.
+
 ## 0.4.0
 
 Cotizaciones, pedidos, ventas, cobros parciales, reembolsos y arqueos desde Comercial. Documentos y cierres imprimibles.
