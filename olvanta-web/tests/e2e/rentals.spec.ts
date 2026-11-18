@@ -161,10 +161,10 @@ test('alquila un local, concilia cuotas y garantías y conserva la renovación',
     saleId: charge.saleId,
     seriesId: billing.series[0].id,
   })
-  const document: Models['BillDetail'] = await (
+  const bill: Models['BillDetail'] = await (
     await req.get('/api/v1/' + base + 'billing/' + doc)
   ).json()
-  expect(document.data).toMatchObject({ total: 160, outstanding: 100 })
+  expect(bill.data).toMatchObject({ total: 160, outstanding: 100 })
   await post(path + '/deposits', {
     ...deposit,
     requestId: randomUUID(),
