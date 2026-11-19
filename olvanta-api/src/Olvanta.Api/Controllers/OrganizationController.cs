@@ -9,7 +9,7 @@ using Olvanta.Infrastructure.Persistence;
 namespace Olvanta.Api.Controllers;
 
 public sealed record CompanyInput([Required, MaxLength(180)] string Name, [RegularExpression("[0-9]{11}")] string? TaxId);
-public sealed record BranchDefaults([RegularExpression("PEN|USD")] string Currency, [Range(0, 100)] decimal TaxRate);
+public sealed record BranchDefaults([RegularExpression("PEN|USD")] string Currency, [Range(0, 100)] decimal TaxRate, [Range(0, 100)] decimal? MaxDiscount = null);
 public sealed record SiteInput(int BranchId, [Required, MaxLength(100)] string Name, [Required, MaxLength(20)] string Code, [Required, MaxLength(300)] string Address);
 public sealed record SiteView(int Id, int BranchId, string Name, string Code, string Address);
 public sealed record SeriesInput(int EstablishmentId, [RegularExpression("invoice|receipt|credit|debit")] string DocumentType, [RegularExpression("[A-Z0-9]{1,12}")] string Code);
@@ -39,7 +39,7 @@ public sealed class OrganizationController(OlvantaDbContext db, SessionAccess ac
     [HttpPut("branches/{branchId:int}/defaults"), ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Defaults(int branchId, BranchDefaults input)
     {
-        if (decimal.Round(input.TaxRate, 2) != input.TaxRate) return BadRequest();
+        if (decimal.Round(input.TaxRate, 2) != input.TaxRate || input.MaxDiscount is decimal maximum && decimal.Round(maximum, 2) != maximum) return BadRequest();
         await using var tx = await db.Database.BeginTransactionAsync();
         var branch = await db.LockBranchAsync(branchId);
         if (branch == null) return NotFound();
@@ -51,11 +51,13 @@ public sealed class OrganizationController(OlvantaDbContext db, SessionAccess ac
             return Problem(statusCode: 409, detail: "La sucursal ya registra operaciones en su moneda actual.");
         branch.Currency = input.Currency;
         branch.TaxRate = input.TaxRate;
-        access.Record("branch.defaults-set", $"{input.Currency} · {input.TaxRate}%", branch.Id);
+        branch.MaxDiscount = input.MaxDiscount ?? branch.MaxDiscount;
+        access.Record("branch.defaults-set", $"{input.Currency} · impuesto {input.TaxRate}% · descuento máximo {branch.MaxDiscount}%", branch.Id);
         await db.SaveChangesAsync();
         await tx.CommitAsync();
         return NoContent();
     }
+
 
     [HttpPost("establishments"), ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> AddSite(SiteInput input)

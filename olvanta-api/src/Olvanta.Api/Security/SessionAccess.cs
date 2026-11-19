@@ -6,7 +6,7 @@ using Olvanta.Infrastructure.Persistence;
 
 namespace Olvanta.Api.Security;
 
-public sealed record BranchAccess(int Id, string Name, string Currency, decimal TaxRate, string Role, string[] Permissions);
+public sealed record BranchAccess(int Id, string Name, string Currency, decimal TaxRate, string Role, string[] Permissions, decimal MaxDiscount = 100);
 public sealed record SessionView(string UserName, bool Administrator, IReadOnlyList<BranchAccess> Branches);
 
 public sealed class SessionAccess(OlvantaDbContext db, UserManager<Operator> users, IHttpContextAccessor http)
@@ -31,9 +31,9 @@ public sealed class SessionAccess(OlvantaDbContext db, UserManager<Operator> use
                     from grant in grants.DefaultIfEmpty()
                     where admin || grant != null
                     orderby branch.Name
-                    select new { branch.Id, branch.Name, branch.Currency, branch.TaxRate, Role = admin ? "administrator" : grant!.Role };
+                    select new { branch.Id, branch.Name, branch.Currency, branch.TaxRate, branch.MaxDiscount, Role = admin ? "administrator" : grant!.Role };
         var branches = (await query.ToListAsync()).Select(b => new BranchAccess(b.Id, b.Name, b.Currency, b.TaxRate, b.Role,
-            admin ? AccessRules.All : AccessRules.Roles[b.Role])).ToList();
+            admin ? AccessRules.All : AccessRules.Roles[b.Role], b.MaxDiscount)).ToList();
         return new SessionView(Actor, admin, branches);
     }
 

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api, type Models } from '../../shared/workspace'
@@ -216,9 +216,16 @@ export function BillingPage({ branch }: { branch: Models['BranchAccess'] }) {
   const details = useQuery({
     queryKey: [...prefix, 'document', id],
     enabled: id != null && !newDoc,
+    refetchInterval: (query) => (query.state.data?.nextQuery ? 3000 : false),
     queryFn: async () =>
       (await api.GET(itemPath, { params: { path: { ...params.path, id: Number(id) } } })).data!,
   })
+  const listStatus = rows.find((row) => row.id === id)?.status
+  const detailStatus = details.data?.document.status
+  useEffect(() => {
+    if (listStatus && detailStatus && listStatus !== detailStatus)
+      void cache.invalidateQueries({ queryKey: ['billing', branch.id], exact: true })
+  }, [cache, branch.id, listStatus, detailStatus])
   const refresh = () => cache.invalidateQueries({ queryKey: prefix })
   const prepare = useMutation({
     mutationFn: async (input: Prepare) => {
@@ -238,11 +245,17 @@ export function BillingPage({ branch }: { branch: Models['BranchAccess'] }) {
     },
   })
   const send = useMutation({
-    mutationFn: async (action: string) =>
-      api.POST(submitPath, {
-        params: { path: { ...params.path, id: Number(id) } },
-        body: { action, scenario: action === 'query' ? 'accept' : scenario },
-      }),
+    mutationFn: async (action: string) => {
+      const document = { path: { ...params.path, id: Number(id) } }
+      if (action === 'schedule') {
+        await api.POST('/api/v1/branches/{branchId}/billing/{id}/reconciliation', { params: document })
+      } else {
+        await api.POST(submitPath, {
+          params: document,
+          body: { action, scenario: action === 'query' ? 'accept' : scenario },
+        })
+      }
+    },
     onSettled: async () => {
       setScenario('accept')
       await refresh()
@@ -419,6 +432,11 @@ export function BillingPage({ branch }: { branch: Models['BranchAccess'] }) {
                     </button>
                   ))}
                 {detail.ticket && <p>Ticket {detail.ticket}</p>}
+                {detail.nextQuery && (
+                  <p role="status">
+                    Consulta programada · {new Date(detail.nextQuery).toLocaleString('es-PE')}
+                  </p>
+                )}
                 {can && live && (
                   <div className="fields trade-action">
                     {row.status === 'prepared' && (
@@ -439,9 +457,20 @@ export function BillingPage({ branch }: { branch: Models['BranchAccess'] }) {
                       </>
                     )}
                     {['uncertain', 'sending', 'processing'].includes(row.status) && (
-                      <button disabled={busy} onClick={() => send.mutate('query')}>
-                        Consultar resultado
-                      </button>
+                      <div className="actions">
+                        <button disabled={busy} onClick={() => send.mutate('query')}>
+                          Consultar resultado
+                        </button>
+                        {(row.mode === 'simulation' || detail.ticket) && !detail.nextQuery && (
+                          <button
+                            className="secondary"
+                            disabled={busy}
+                            onClick={() => send.mutate('schedule')}
+                          >
+                            Programar consulta
+                          </button>
+                        )}
+                      </div>
                     )}
                     {['awaiting-summary', 'accepted'].includes(row.status) &&
                       !['RC', 'RA'].includes(row.type) && (

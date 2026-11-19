@@ -21,6 +21,7 @@ builder.Services.AddScoped<SessionAccess>();
 builder.Services.AddSingleton<FiscalSigner>();
 builder.Services.AddScoped<FiscalIssuer>();
 builder.Services.AddScoped<FiscalDelivery>();
+builder.Services.AddHostedService<FiscalReconciler>();
 builder.Services.AddScoped<SimulatedGateway>();
 builder.Services.AddHttpClient<BetaGateway>(c =>
 {
@@ -65,7 +66,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi("v1", options => options.AddDocumentTransformer((document, _, _) =>
 {
     document.Info.Title = "Olvanta API";
-    document.Info.Version = "0.8.0";
+    document.Info.Version = "0.9.0";
     document.Servers = [new Microsoft.OpenApi.OpenApiServer { Url = "/" }];
     document.Components ??= new OpenApiComponents();
     document.Components.SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>

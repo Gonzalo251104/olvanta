@@ -114,15 +114,15 @@ test('emite documentos y concilia respuestas en la simulación fiscal', async ({
       await change(request, 'POST', billing + '/' + invoice + '/submission', { action: 'send' })
     ).status(),
   ).toBe(409)
-  await page.getByRole('button', { name: 'Consultar resultado' }).click()
-  await expect(page.getByRole('link', { name: 'CDR', exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Programar consulta' }).click()
+  await expect(page.getByRole('link', { name: 'CDR', exact: true })).toBeVisible({ timeout: 20000 })
   const original = await detail(invoice)
   expect(original).toMatchObject({
     data: { tax: 36, total: 236 },
     document: { status: 'accepted' },
     attempts: [
       { action: 'send', outcome: 'uncertain' },
-      { action: 'query', outcome: 'accepted' },
+      { action: 'query', outcome: 'accepted', actor: 'Conciliación programada' },
     ],
   })
   for (const ext of ['pdf', 'xml', 'zip', 'cdr']) {

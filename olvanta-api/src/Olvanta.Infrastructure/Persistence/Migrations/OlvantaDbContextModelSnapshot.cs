@@ -207,6 +207,12 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(3)")
                         .HasDefaultValue("PEN");
 
+                    b.Property<decimal>("MaxDiscount")
+                        .ValueGeneratedOnAdd()
+                        .HasPrecision(5, 2)
+                        .HasColumnType("decimal(5,2)")
+                        .HasDefaultValue(100m);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -467,6 +473,9 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("nvarchar(16)");
 
+                    b.Property<DateTimeOffset?>("NextQuery")
+                        .HasColumnType("datetimeoffset");
+
                     b.Property<int>("Number")
                         .HasColumnType("int");
 
@@ -476,6 +485,9 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.Property<byte[]>("Pdf")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("PlannedQueries")
+                        .HasColumnType("int");
 
                     b.Property<string>("RequestHash")
                         .IsRequired()
@@ -531,6 +543,9 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("BranchId", "RequestId")
                         .IsUnique();
+
+                    b.HasIndex("Mode", "NextQuery")
+                        .HasFilter("[NextQuery] IS NOT NULL");
 
                     b.HasIndex("Mode", "SourceKey")
                         .IsUnique()
@@ -1355,6 +1370,8 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CashSessionId");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("CashSessionId"), new[] { "CashDelta" });
 
                     b.HasIndex("DepositLeaseId");
 

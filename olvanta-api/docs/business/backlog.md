@@ -52,6 +52,10 @@ PRK-01 se entrega en la versión 0.7.0. La [guía de estacionamientos](parking.m
 
 OLV-01 se entrega en la versión 0.8.0. La [guía de aceitunas](olive-commerce.md) describe la reconciliación de peso y valor y la consulta desde el cliente hasta la recepción.
 
+### Evidencia de la fase 9
+
+MNT-01 se entrega en la versión 0.9.0. La [guía de mantenimiento](maintenance.md) reúne la reproducción del redondeo, el diagnóstico por fila, el cambio de política de descuentos, la conciliación fiscal programada y la medición SQL. Los flujos de varios almacenes y presentaciones se verifican en los escenarios de inventario y aceitunas.
+
 ### Dependencias que se resolverán en su fase
 
 BIL-01 requiere verificar la modalidad y reglas de SUNAT vigentes para el emisor. La emisión real requiere credenciales, certificado y aceptación operativa. REL-01 requiere definir el alojamiento, licencias y carga de referencia.

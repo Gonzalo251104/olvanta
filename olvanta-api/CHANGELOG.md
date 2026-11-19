@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.9.0
+
+Importación CSV con validación por fila, descuento máximo por sucursal, valoración acumulada de recepciones parciales, consultas fiscales programadas e índice de caja con cobertura.
+
 ## 0.8.0
 
 Recepción por peso neto, factores históricos de presentación y reenvasado atómico con merma y balance de peso y valor. Trazabilidad desde la entrega al cliente hasta la compra original.

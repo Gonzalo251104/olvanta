@@ -89,11 +89,31 @@ function History({
 }
 
 function ImportForm({ branchId, kind, done }: { branchId: number; kind: Kind; done: () => void }) {
+  const [csv, setCsv] = useState<{ content: string; result: Models['PartyCsvResult'] }>()
+  const sendCsv = async (content: string, commit: boolean) => {
+    const { data } = await api.POST('/api/v1/branches/{branchId}/masters/{kind}/import/csv', {
+      params: { path: { branchId, kind } },
+      body: { content, commit },
+    })
+    setCsv({ content, result: data! })
+    if (Number(data!.imported) > 0) done()
+  }
   const upload = useMutation({
-    mutationFn: async (form: FormData) => {
+    mutationFn: async (form: FormData | 'confirm') => {
+      if (form === 'confirm' && csv) return sendCsv(csv.content, true)
+      if (form === 'confirm') return
       const file = form.get('file')
       if (!(file instanceof File) || file.size > 512000)
-        throw new Error('Seleccione un JSON de hasta 500 KB.')
+        throw new Error('Seleccione un CSV o JSON de hasta 500 KB.')
+      if (file.name.toLowerCase().endsWith('.csv')) {
+        let content
+        try {
+          content = new TextDecoder('utf-8', { fatal: true }).decode(await file.arrayBuffer())
+        } catch {
+          throw new Error('Guarde el archivo CSV con codificación UTF-8.')
+        }
+        return sendCsv(content, false)
+      }
       let rows
       try {
         rows = JSON.parse(await file.text())
@@ -105,8 +125,8 @@ function ImportForm({ branchId, kind, done }: { branchId: number; kind: Kind; do
         params: { path: { branchId, kind } },
         body: rows,
       })
+      done()
     },
-    onSuccess: done,
   })
   return (
     <form
@@ -118,14 +138,68 @@ function ImportForm({ branchId, kind, done }: { branchId: number; kind: Kind; do
     >
       <h2>Importar registros</h2>
       <label>
-        Archivo JSON (hasta 200 registros)
-        <input name="file" type="file" accept=".json,application/json" required />
+        Archivo CSV o JSON (hasta 200 registros)
+        <input
+          name="file"
+          type="file"
+          accept=".csv,text/csv,.json,application/json"
+          required
+          disabled={upload.isPending}
+          onChange={() => {
+            setCsv(undefined)
+            upload.reset()
+          }}
+        />
       </label>
       <a href="/plantilla-personas.json" download>
-        Descargar plantilla
+        Descargar plantilla JSON
+      </a>
+      <a href="/plantilla-personas.csv" download>
+        Descargar plantilla CSV
       </a>
       {upload.error && <p role="alert">{upload.error.message}</p>}
-      <button disabled={upload.isPending}>Validar e importar</button>
+      <button disabled={upload.isPending}>Procesar archivo</button>
+      {csv && (
+        <section className="fields">
+          <h3>Vista previa del CSV</h3>
+          {csv.result.issues.length > 0 && (
+            <ul className="trade-list" role="alert">
+              {csv.result.issues.map((issue, index) => (
+                <li key={index}>
+                  Fila {issue.row}. {issue.message}
+                </li>
+              ))}
+            </ul>
+          )}
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fila</th>
+                  <th>Identificador</th>
+                  <th>Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                {csv.result.rows.map((row) => (
+                  <tr key={row.row}>
+                    <td>{row.row}</td>
+                    <td>{row.code}</td>
+                    <td>{row.name}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <button
+            type="button"
+            disabled={upload.isPending || csv.result.issues.length > 0}
+            onClick={() => upload.mutate('confirm')}
+          >
+            Confirmar importación
+          </button>
+        </section>
+      )}
     </form>
   )
 }
@@ -243,10 +317,18 @@ export function MasterPage({ branch, kind }: { branch: Models['BranchAccess']; k
                   <table role="table">
                     <thead role="rowgroup">
                       <tr role="row">
-                        <th role="columnheader" scope="col">Nombre</th>
-                        <th role="columnheader" scope="col">{party ? 'Documento' : 'Código'}</th>
-                        <th role="columnheader" scope="col">Estado</th>
-                        <th role="columnheader" scope="col">Acciones</th>
+                        <th role="columnheader" scope="col">
+                          Nombre
+                        </th>
+                        <th role="columnheader" scope="col">
+                          {party ? 'Documento' : 'Código'}
+                        </th>
+                        <th role="columnheader" scope="col">
+                          Estado
+                        </th>
+                        <th role="columnheader" scope="col">
+                          Acciones
+                        </th>
                       </tr>
                     </thead>
                     <tbody role="rowgroup">
@@ -257,7 +339,9 @@ export function MasterPage({ branch, kind }: { branch: Models['BranchAccess']; k
                           className={selected?.id === row.id ? 'selected-row' : undefined}
                         >
                           <td role="cell">{row.data.name}</td>
-                          <td role="cell" className="record-code">{row.data.code}</td>
+                          <td role="cell" className="record-code">
+                            {row.data.code}
+                          </td>
                           <td role="cell">
                             <span className={row.data.active ? 'record-state' : 'record-state inactive'}>
                               {row.data.active ? 'Activo' : 'Inactivo'}
@@ -306,7 +390,8 @@ export function MasterPage({ branch, kind }: { branch: Models['BranchAccess']; k
                 )}
                 <div className="pager">
                   <span>
-                    {query.data.total} {Number(query.data.total) === 1 ? 'registro' : 'registros'} · Página {page}
+                    {query.data.total} {Number(query.data.total) === 1 ? 'registro' : 'registros'} ·
+                    Página {page}
                   </span>
                   <button
                     className="secondary"

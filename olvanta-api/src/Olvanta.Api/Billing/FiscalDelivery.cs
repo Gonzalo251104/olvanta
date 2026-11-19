@@ -1,15 +1,33 @@
 using System.Xml;
 using Microsoft.EntityFrameworkCore;
-using Olvanta.Api.Security;
 using Olvanta.Application;
 using Olvanta.Domain;
 using Olvanta.Infrastructure.Persistence;
 
 namespace Olvanta.Api.Billing;
 
-public sealed class FiscalDelivery(OlvantaDbContext db, SessionAccess access, FiscalSigner signer, SimulatedGateway simulator, BetaGateway beta)
+public sealed class FiscalDelivery(OlvantaDbContext db, FiscalSigner signer, SimulatedGateway simulator, BetaGateway beta)
 {
-    public async Task Process(int branchId, int id, SubmissionInput input)
+    private const int MaximumQueries = 5;
+    private static bool CanQuery(FiscalDocument doc) => doc.Status is "uncertain" or "sending" or "processing";
+
+    public async Task Schedule(int branchId, int id, string actor)
+    {
+        await using var transaction = await db.Database.BeginTransactionAsync();
+        await db.LockBranchAsync(branchId);
+        var doc = await db.FiscalDocuments.SingleOrDefaultAsync(x => x.BranchId == branchId && x.Id == id)
+            ?? throw new TradeException("Documento no encontrado.", 404);
+        if (doc.Mode != signer.Mode || !CanQuery(doc) || doc.Mode == "beta" && string.IsNullOrEmpty(doc.Ticket))
+            throw new TradeException("La consulta programada requiere un documento pendiente del entorno activo y un ticket en BETA.");
+        if (doc.NextQuery != null) return;
+        doc.NextQuery = DateTimeOffset.UtcNow.AddSeconds(3);
+        doc.PlannedQueries = 0;
+        db.Audit.Add(new AuditEntry { Actor = actor, Action = "billing.query-scheduled", Detail = doc.Identifier, BranchId = branchId });
+        await db.SaveChangesAsync();
+        await transaction.CommitAsync();
+    }
+
+    public async Task Process(int branchId, int id, SubmissionInput input, string actor, bool scheduled = false)
     {
         var query = input.Action == "query";
         if (!query && input.Action != "send") throw new TradeException("Seleccione enviar o consultar.", 400);
@@ -25,13 +43,22 @@ public sealed class FiscalDelivery(OlvantaDbContext db, SessionAccess access, Fi
             doc = await db.FiscalDocuments.SingleOrDefaultAsync(x => x.BranchId == branchId && x.Id == id)
                 ?? throw new TradeException("Documento no encontrado.", 404);
             if (doc.Mode != signer.Mode) throw new TradeException("El entorno activo difiere del entorno de emisión.");
+            if (scheduled && (doc.NextQuery == null || doc.NextQuery > DateTimeOffset.UtcNow || !CanQuery(doc))) return;
             if (doc.LeaseUntil > DateTimeOffset.UtcNow) throw new TradeException("Ya existe una operación en curso.");
-            if (query ? doc.Status is not ("uncertain" or "sending" or "processing") : doc.Status != "prepared")
+            if (query ? !CanQuery(doc) : doc.Status != "prepared")
                 throw new TradeException("La acción no corresponde al estado del documento.");
+            if (scheduled && doc.PlannedQueries >= MaximumQueries)
+            {
+                doc.NextQuery = null;
+                await db.SaveChangesAsync();
+                await tx.CommitAsync();
+                return;
+            }
+            if (scheduled) doc.PlannedQueries++;
             doc.Lease = lease;
             doc.LeaseUntil = DateTimeOffset.UtcNow.AddMinutes(2);
             doc.Status = query ? "uncertain" : "sending";
-            attempt = new FiscalAttempt { DocumentId = id, Actor = access.Actor, Action = input.Action, Outcome = "started", Detail = "Intento iniciado." };
+            attempt = new FiscalAttempt { DocumentId = id, Actor = actor, Action = input.Action, Outcome = "started", Detail = "Intento iniciado." };
             db.FiscalAttempts.Add(attempt);
             await db.SaveChangesAsync();
             await tx.CommitAsync();
@@ -58,6 +85,9 @@ public sealed class FiscalDelivery(OlvantaDbContext db, SessionAccess access, Fi
             doc.Active = outcome.Status != "rejected";
             doc.Lease = null;
             doc.LeaseUntil = null;
+            if (doc.NextQuery != null)
+                doc.NextQuery = CanQuery(doc) && doc.PlannedQueries < MaximumQueries
+                    ? DateTimeOffset.UtcNow.AddSeconds(15 * (1 << Math.Max(0, doc.PlannedQueries - 1))) : null;
             if (outcome.Status == "accepted" && doc.Type is ("RC" or "RA"))
             {
                 var parent = await db.FiscalDocuments.SingleAsync(x => x.Id == doc.ParentId && x.BranchId == branchId);
@@ -65,7 +95,7 @@ public sealed class FiscalDelivery(OlvantaDbContext db, SessionAccess access, Fi
                 else parent.Status = "accepted";
             }
         }
-        access.Record("billing." + input.Action, $"{doc.Mode} · {doc.FileStem} · {outcome.Status}", branchId);
+        db.Audit.Add(new AuditEntry { Actor = actor, Action = "billing." + input.Action, Detail = $"{doc.Mode} · {doc.FileStem} · {outcome.Status}", BranchId = branchId });
         await db.SaveChangesAsync();
         await complete.CommitAsync();
     }

@@ -57,6 +57,7 @@ public sealed class MastersController(OlvantaDbContext db, SessionAccess access)
         var rejected = await CheckWrite(branchId, kind, input);
         if (rejected != null) return rejected;
         await using var tx = await db.Database.BeginTransactionAsync();
+        await db.LockBranchAsync(branchId);
         var record = Add(branchId, kind, input);
         await db.SaveChangesAsync();
         Audit(record, "master.created");
@@ -72,7 +73,7 @@ public sealed class MastersController(OlvantaDbContext db, SessionAccess access)
         var rejected = await CheckWrite(branchId, kind, input);
         if (rejected != null) return rejected;
         await using var tx = await db.Database.BeginTransactionAsync();
-        if (kind == "products") await db.LockBranchAsync(branchId);
+        await db.LockBranchAsync(branchId);
         var record = await Scope(branchId, kind).SingleOrDefaultAsync(x => x.Id == id);
         if (record == null) return NotFound();
         if (input.Version?.Length != 8) return Problem(statusCode: 400, detail: "Se requiere la versión del registro.");
@@ -103,15 +104,52 @@ public sealed class MastersController(OlvantaDbContext db, SessionAccess access)
             if (rows[i] == null || error != null) return Problem(statusCode: 400, detail: $"Fila {i + 1}. {error ?? "Fila vacía."}");
             if (!codes.Add(rows[i].Code.Trim().ToUpperInvariant())) return Problem(statusCode: 400, detail: $"Fila {i + 1}. Identificador repetido en el archivo.");
         }
-        var existing = await Scope(branchId, kind).Where(x => codes.Contains(x.Code)).Select(x => x.Code).ToListAsync();
-        if (existing.Count > 0) return Problem(statusCode: 409, detail: $"Ya existe el identificador {existing[0]} en esta sucursal.");
         await using var tx = await db.Database.BeginTransactionAsync();
+        await db.LockBranchAsync(branchId);
+        var existing = await Scope(branchId, kind).Where(x => codes.Contains(x.Code)).Select(x => x.Code).ToListAsync();
+        if (existing.Count > 0)
+        {
+            var first = Array.FindIndex(rows, r => r.Code.Trim().Equals(existing[0], StringComparison.OrdinalIgnoreCase));
+            return Problem(statusCode: 409, detail: $"Fila {first + 1}. Ya existe el identificador {existing[0]} en esta sucursal.");
+        }
+        await SaveImport(branchId, kind, rows);
+        await tx.CommitAsync();
+        return NoContent();
+    }
+
+    [HttpPost("import/csv"), RequestSizeLimit(3_200_000)]
+    public async Task<ActionResult<PartyCsvResult>> Csv(int branchId, string kind, PartyCsvInput input)
+    {
+        if (!MasterInput.IsParty(kind)) return NotFound();
+        if (!await access.AllowsAsync(branchId, AccessRules.Write)) return Forbid();
+        var (rows, issues) = PartyImport.Parse(input.Content, kind);
+        await using var tx = await db.Database.BeginTransactionAsync();
+        if (input.Commit) await db.LockBranchAsync(branchId);
+        var preview = rows.Select(r => new CsvParty(r.Row, r.Data.Code.Trim().ToUpperInvariant(), r.Data.Name.Trim())).ToList();
+        var codes = preview.Select(r => r.Code).Distinct().ToArray();
+        var existing = (await Scope(branchId, kind).Where(m => codes.Contains(m.Code)).Select(m => m.Code).ToListAsync()).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var row in preview)
+        {
+            if (!seen.Add(row.Code)) issues.Add(new(row.Row, "Identificador repetido en el archivo."));
+            if (existing.Contains(row.Code)) issues.Add(new(row.Row, "El identificador ya existe en esta sucursal."));
+        }
+        int imported = 0;
+        if (input.Commit && issues.Count == 0)
+        {
+            await SaveImport(branchId, kind, rows.Select(r => r.Data));
+            imported = rows.Count;
+        }
+        await tx.CommitAsync();
+        return new PartyCsvResult(preview, issues.OrderBy(e => e.Row).ToList(), imported);
+    }
+
+    private async Task SaveImport(int branchId, string kind, IEnumerable<MasterInput> rows)
+    {
         var records = rows.Select(row => Add(branchId, kind, row)).ToArray();
         await db.SaveChangesAsync();
         foreach (var record in records) Audit(record, "master.imported");
         await db.SaveChangesAsync();
-        await tx.CommitAsync();
-        return NoContent();
     }
 
     private async Task<ActionResult?> CheckWrite(int branchId, string kind, MasterInput input)

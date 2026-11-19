@@ -68,6 +68,9 @@ public static class StockMath
     public static decimal ReceiptValue(decimal quantity, decimal unitCost) =>
         decimal.Round(quantity * unitCost, 6, MidpointRounding.AwayFromZero);
 
+    public static decimal PartialReceiptValue(decimal received, decimal quantity, decimal unitCost) =>
+        ReceiptValue(received + quantity, unitCost) - ReceiptValue(received, unitCost);
+
     public static decimal IssueValue(decimal quantity, decimal onHand, decimal value) =>
         quantity == onHand ? value : decimal.Round(value / onHand * quantity, 6, MidpointRounding.AwayFromZero);
 }

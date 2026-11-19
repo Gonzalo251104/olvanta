@@ -21,6 +21,7 @@ internal static class BillingModel
         doc.HasIndex(x => new { x.Mode, x.Type, x.Series, x.Number }).IsUnique();
         doc.HasIndex(x => new { x.Mode, x.SourceKey }).HasFilter("[Active] = 1").IsUnique();
         doc.HasIndex(x => new { x.BranchId, x.RequestId }).IsUnique();
+        doc.HasIndex(x => new { x.Mode, x.NextQuery }).HasFilter("[NextQuery] IS NOT NULL");
         var attempt = model.Entity<FiscalAttempt>();
         attempt.ToTable("Attempts", "billing");
         attempt.HasOne<FiscalDocument>().WithMany().HasForeignKey(x => x.DocumentId).OnDelete(DeleteBehavior.Restrict);
