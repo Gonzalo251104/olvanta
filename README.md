@@ -1,6 +1,6 @@
 # Olvanta
 
-Plataforma de operaciones comerciales para una empresa peruana. La versión 0.9.0 incorpora importación CSV con vista previa, descuentos por sucursal y conciliación programada a los módulos de operaciones.
+Plataforma de operaciones comerciales para una empresa peruana. La versión 1.0.0 reúne compras, inventario, ventas, caja, facturación simulada, alquileres, estacionamientos y aceitunas, con reportes y recuperación verificada.
 
 | Componente | Contenido |
 | --- | --- |
@@ -15,6 +15,7 @@ Plataforma de operaciones comerciales para una empresa peruana. La versión 0.9.
 | [Guía de estacionamientos](olvanta-api/docs/business/parking.md) | Ocupación, entradas, salidas, tarifas y abonos de la fase 7 |
 | [Guía de comercialización de aceitunas](olvanta-api/docs/business/olive-commerce.md) | Recepción pesada, reenvasado, merma y trazabilidad de la fase 8 |
 | [Guía de mantenimiento](olvanta-api/docs/business/maintenance.md) | Importación, cambios históricos, conciliación y SQL de la fase 9 |
+| [Versión integrada](olvanta-api/docs/business/integrated-release.md) | Jornada de demostración, reportes, despliegue y recuperación |
 
 ## Arranque local
 

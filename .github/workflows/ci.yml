@@ -78,6 +78,18 @@ jobs:
           docker compose start sql
           pwsh -File ../scripts/Test-Local.ps1
 
+      - name: Restore a backup in a clean project and compare the integrated reports
+        shell: pwsh
+        run: |
+          $backup = Join-Path $env:RUNNER_TEMP 'olvanta-release.bak'
+          $evidence = Get-ChildItem olvanta-web/test-results -Recurse -Filter release-evidence.json | Select-Object -First 1
+          if (!$evidence) { throw 'Missing integrated report evidence.' }
+          ./olvanta-api/scripts/Backup-Local.ps1 -File $backup
+          docker compose --env-file ./olvanta-api/deploy/.env -f ./olvanta-api/deploy/compose.yaml stop
+          if ($LASTEXITCODE) { throw 'Failed to stop the source test stack.' }
+          ./olvanta-api/scripts/Restore-Local.ps1 -File $backup -Project olvanta-ci-restore -Port 5191
+          ./olvanta-api/scripts/Verify-Restore.ps1 -Evidence $evidence.FullName -BaseUrl http://127.0.0.1:5191
+
       - name: Inspect service status on failure
         if: failure()
         working-directory: olvanta-api/deploy

@@ -66,7 +66,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddOpenApi("v1", options => options.AddDocumentTransformer((document, _, _) =>
 {
     document.Info.Title = "Olvanta API";
-    document.Info.Version = "0.9.0";
+    document.Info.Version = "1.0.0";
     document.Servers = [new Microsoft.OpenApi.OpenApiServer { Url = "/" }];
     document.Components ??= new OpenApiComponents();
     document.Components.SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>

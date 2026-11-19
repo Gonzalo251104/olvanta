@@ -8,6 +8,7 @@ import { MasterPage } from '../features/masters/MasterPage'
 import { InventoryPage } from '../features/inventory/InventoryPage'
 import { SalesPage } from '../features/sales/SalesPage'
 import { BillingPage } from '../features/billing/BillingPage'
+import ReportsPage, { canSeeReports } from '../features/reports/ReportsPage'
 import { AdminPage } from '../features/admin/AdminPage'
 import { SystemPage } from '../features/system/SystemPage'
 import { Brand } from './Brand'
@@ -211,6 +212,12 @@ function Workspace() {
               )}
             </>
           )}
+          {branch && canSeeReports(branch) && (
+            <div className="nav-group">
+              <span>Resultados</span>
+              <NavLink to="/reportes">Reportes</NavLink>
+            </div>
+          )}
           {user.administrator && (
             <div className="nav-group">
               <span>Gestión</span>
@@ -226,6 +233,9 @@ function Workspace() {
         {logout.error && <p role="alert">{logout.error.message}</p>}
         <Routes>
           <Route path="/cuenta" element={<PasswordForm />} />
+          {branch && canSeeReports(branch) && (
+            <Route path="/reportes" element={<ReportsPage key={branch.id} branch={branch} />} />
+          )}
           {branch?.permissions.includes('inventory.read') && (
             <Route
               path="/aceitunas"

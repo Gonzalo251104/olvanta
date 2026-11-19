@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.0.0
+
+Reportes por sucursal con CSV y arqueo en PDF. La prueba integrada reconcilia compras, ventas, facturación simulada, alquileres, estacionamientos y caja. Incluye respaldo verificable y restauración en un proyecto limpio.
+
 ## 0.9.0
 
 Importación CSV con validación por fila, descuento máximo por sucursal, valoración acumulada de recepciones parciales, consultas fiscales programadas e índice de caja con cobertura.

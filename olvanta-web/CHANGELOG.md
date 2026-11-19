@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.0.0
+
+Panel de reportes por sucursal con filtros, descargas y permisos de los módulos de origen.
+
 ## 0.9.0
 
 Vista previa CSV con confirmación, configuración de descuentos y seguimiento de consultas programadas desde Facturación.
