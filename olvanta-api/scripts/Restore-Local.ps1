@@ -8,7 +8,7 @@ param(
 $ErrorActionPreference = 'Stop'
 if ($Project -eq 'olvanta') { throw 'Elija un nombre nuevo para el entorno de recuperación.' }
 $source = (Get-Item -LiteralPath $File).FullName
-$credentials = (Get-Item -LiteralPath $EnvironmentFile).FullName
+$credentials = (Get-Item -LiteralPath $EnvironmentFile -Force).FullName
 $existingContainers = docker ps -aq --filter "label=com.docker.compose.project=$Project"
 if ($LASTEXITCODE) { throw 'Docker no pudo comprobar el proyecto de destino.' }
 $existingVolumes = docker volume ls -q --filter "label=com.docker.compose.project=$Project"

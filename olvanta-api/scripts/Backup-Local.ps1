@@ -10,7 +10,7 @@ if (Test-Path -LiteralPath $destination) { throw 'El archivo de destino ya exist
 $null = [IO.Directory]::CreateDirectory([IO.Path]::GetDirectoryName($destination))
 $temporary = '/var/opt/mssql/data/olvanta-export-' + [Guid]::NewGuid().ToString('N') + '.bak'
 $deployment = Join-Path $PSScriptRoot '../deploy'
-$compose = @('compose', '-f', (Join-Path $deployment 'compose.yaml'), '--project-name', $Project, '--env-file', (Get-Item -LiteralPath $EnvironmentFile).FullName)
+$compose = @('compose', '-f', (Join-Path $deployment 'compose.yaml'), '--project-name', $Project, '--env-file', (Get-Item -LiteralPath $EnvironmentFile -Force).FullName)
 @"
 BACKUP DATABASE [Olvanta] TO DISK = N'$temporary' WITH COPY_ONLY, CHECKSUM, COMPRESSION;
 RESTORE VERIFYONLY FROM DISK = N'$temporary' WITH CHECKSUM;
