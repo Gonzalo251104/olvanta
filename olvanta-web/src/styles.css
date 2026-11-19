@@ -159,6 +159,11 @@ button.quiet { border-color: #8b7286; color: inherit; background: transparent; w
 .parking-zone progress { width: 100%; accent-color: var(--copper, #945038); }
 .parking-work { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
 .parking-ticket { margin-top: 1rem; max-width: 40rem; }
+.olive-tabs { margin-bottom: 1rem; }
+.olive-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: .85rem; align-items: end; }
+.fields fieldset.olive-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr)); }
+.olive-weights { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: .7rem; border-block: 1px solid var(--rule); padding-block: .8rem; }
+.olive-weights strong { display: block; }
 @media (max-width: 750px) { .parking-work, .parking-toolbar { grid-template-columns: minmax(0, 1fr); } }
 .rent-period { grid-template-columns: minmax(9rem, 14rem) auto; align-items: end; justify-content: start; }
 @media (max-width: 600px) { .rent-account, .rent-period { grid-template-columns: 1fr; } }

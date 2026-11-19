@@ -9,6 +9,8 @@ export const movementNames: Record<string, string> = {
   'sale-cancel': 'Liberación por anulación',
   'sale-dispatch': 'Despacho de venta',
   'sale-return': 'Devolución de venta',
+  'olive-consume': 'Consumo para reenvasado o merma',
+  'olive-pack': 'Entrada de presentación reenvasada',
   receipt: 'Recepción de compra',
   entry: 'Entrada',
   issue: 'Salida',

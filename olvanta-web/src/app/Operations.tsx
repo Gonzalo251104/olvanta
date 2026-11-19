@@ -104,6 +104,7 @@ function PasswordForm() {
 
 const RentalPage = lazy(() => import('../features/rentals/RentalPage'))
 const ParkingPage = lazy(() => import('../features/parking/ParkingPage'))
+const OlivePage = lazy(() => import('../features/olives/OlivePage'))
 
 function Workspace() {
   const cache = useQueryClient()
@@ -205,6 +206,7 @@ function Workspace() {
                 <div className="nav-group">
                   <span>Abastecimiento</span>
                   <NavLink to="/inventario">Compras e inventario</NavLink>
+                  <NavLink to="/aceitunas">Aceitunas</NavLink>
                 </div>
               )}
             </>
@@ -224,6 +226,16 @@ function Workspace() {
         {logout.error && <p role="alert">{logout.error.message}</p>}
         <Routes>
           <Route path="/cuenta" element={<PasswordForm />} />
+          {branch?.permissions.includes('inventory.read') && (
+            <Route
+              path="/aceitunas"
+              element={
+                <Suspense fallback={<p>Cargando lotes de aceitunas…</p>}>
+                  <OlivePage key={branch.id} branch={branch} />
+                </Suspense>
+              }
+            />
+          )}
           {branch?.permissions.includes('parking.read') && (
             <Route
               path="/estacionamientos"

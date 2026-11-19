@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.8.0
+
+Vista de existencias de aceitunas, formularios de pesada y reenvasado, y trazabilidad por lote y cliente.
+
 ## 0.7.0
 
 Panel de ocupación, entradas y salidas, abonos, configuración de tarifa y constancias imprimibles.

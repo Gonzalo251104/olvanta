@@ -701,6 +701,139 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                     b.ToTable("Masters", "catalog");
                 });
 
+            modelBuilder.Entity("Olvanta.Domain.OliveLot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("Grade")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Gross")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<decimal>("KgPerUnit")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<string>("Origin")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Presentation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ProcessId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Product")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("ReceiptId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("RootId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Supplier")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SupplierLot")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Tare")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Variety")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("WholeUnits")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProcessId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("ReceiptId")
+                        .IsUnique()
+                        .HasFilter("[ReceiptId] IS NOT NULL");
+
+                    b.HasIndex("RootId");
+
+                    b.HasIndex("BranchId", "ProductId", "Code")
+                        .IsUnique();
+
+                    b.ToTable("Lots", "olives");
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.OliveProcess", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
+                    b.Property<long>("ConsumeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<decimal>("InputKg")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<decimal>("LossKg")
+                        .HasPrecision(18, 6)
+                        .HasColumnType("decimal(18,6)");
+
+                    b.Property<decimal>("LossValue")
+                        .HasPrecision(28, 6)
+                        .HasColumnType("decimal(28,6)");
+
+                    b.Property<Guid>("OperationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SourceId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsumeId")
+                        .IsUnique();
+
+                    b.HasIndex("SourceId");
+
+                    b.HasIndex("BranchId", "OperationId")
+                        .IsUnique();
+
+                    b.ToTable("Repacking", "olives");
+                });
+
             modelBuilder.Entity("Olvanta.Domain.ParkingPass", b =>
                 {
                     b.Property<int>("Id")
@@ -1623,6 +1756,61 @@ namespace Olvanta.Infrastructure.Persistence.Migrations
                         .HasForeignKey("BranchId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.OliveLot", b =>
+                {
+                    b.HasOne("Olvanta.Domain.Branch", null)
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.OliveProcess", null)
+                        .WithMany()
+                        .HasForeignKey("ProcessId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Olvanta.Domain.MasterRecord", null)
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.StockMovement", "Receipt")
+                        .WithOne()
+                        .HasForeignKey("Olvanta.Domain.OliveLot", "ReceiptId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Olvanta.Domain.OliveLot", null)
+                        .WithMany()
+                        .HasForeignKey("RootId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Receipt");
+                });
+
+            modelBuilder.Entity("Olvanta.Domain.OliveProcess", b =>
+                {
+                    b.HasOne("Olvanta.Domain.Branch", null)
+                        .WithMany()
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.StockMovement", "Consume")
+                        .WithOne()
+                        .HasForeignKey("Olvanta.Domain.OliveProcess", "ConsumeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Olvanta.Domain.OliveLot", null)
+                        .WithMany()
+                        .HasForeignKey("SourceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Consume");
                 });
 
             modelBuilder.Entity("Olvanta.Domain.ParkingPass", b =>
