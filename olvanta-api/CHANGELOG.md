@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.8.0
+
+Recepción por peso neto, factores históricos de presentación y reenvasado atómico con merma y balance de peso y valor. Trazabilidad desde la entrega al cliente hasta la compra original.
+
 ## 0.7.0
 
 Estacionamientos por sucursal, capacidad por zona, versiones de tarifa, abonos y salidas idempotentes con conciliación de caja.

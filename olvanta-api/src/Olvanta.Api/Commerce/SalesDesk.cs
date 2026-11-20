@@ -36,6 +36,10 @@ internal sealed class SalesDesk(OlvantaDbContext db)
             {
                 if (!await db.Warehouses.AnyAsync(x => x.BranchId == branch.Id && x.Id == row.WarehouseId))
                     throw new TradeException("Seleccione un almacén de la sucursal.", 400);
+                var code = row.Lot?.Trim().ToUpperInvariant() ?? "";
+                var olive = await db.OliveLots.SingleOrDefaultAsync(x => x.BranchId == branch.Id && x.ProductId == item.Id && x.Code == code);
+                if (olive != null && !OliveUnits.Valid(olive, row.Quantity))
+                    throw new TradeException("Indique una cantidad entera para esta presentación.", 400);
             }
             else if (row.WarehouseId != null || !string.IsNullOrWhiteSpace(row.Lot))
                 throw new TradeException("Un servicio se registra sin almacén ni lote.", 400);

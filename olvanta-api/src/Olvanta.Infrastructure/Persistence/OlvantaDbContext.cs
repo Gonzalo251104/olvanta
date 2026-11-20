@@ -18,6 +18,8 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
     public DbSet<PurchaseLine> PurchaseLines => Set<PurchaseLine>();
     public DbSet<StockMinimum> Minimums => Set<StockMinimum>();
     public DbSet<StockMovement> Movements => Set<StockMovement>();
+    public DbSet<OliveLot> OliveLots => Set<OliveLot>();
+    public DbSet<OliveProcess> OliveProcesses => Set<OliveProcess>();
     public DbSet<Sale> Sales => Set<Sale>();
     public DbSet<ParkingSite> ParkingSites => Set<ParkingSite>();
     public DbSet<ParkingZone> ParkingZones => Set<ParkingZone>();
@@ -46,6 +48,7 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
         base.OnModelCreating(model);
         model.HasDefaultSchema("identity");
         InventoryModel.Configure(model);
+        OliveModel.Configure(model);
         SalesModel.Configure(model);
         BillingModel.Configure(model);
         RentalModel.Configure(model);

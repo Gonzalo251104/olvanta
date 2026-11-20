@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Olvanta.Domain;
 
 namespace Olvanta.Application;
@@ -11,7 +12,8 @@ public sealed record PurchaseInput(int SupplierId, [Required, MaxLength(80)] str
 public sealed record MovementInput(Guid OperationId, [Required] string Kind, int WarehouseId, int ProductId,
     decimal Quantity, [Required, MaxLength(240)] string Reason, decimal? UnitCost = null,
     [MaxLength(80)] string? Lot = null, DateOnly? Expiry = null, int? DestinationId = null,
-    int? PurchaseLineId = null, long? RelatedId = null)
+    int? PurchaseLineId = null, long? RelatedId = null,
+    [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] OliveWeights? Olive = null)
 {
     public string? Validate()
     {
@@ -21,6 +23,9 @@ public sealed record MovementInput(Guid OperationId, [Required] string Kind, int
         if (needsCost != UnitCost.HasValue || (UnitCost is decimal cost && !StockMath.ValidCost(cost)))
             return "Indique el costo por unidad solo en entradas directas y ajustes positivos.";
         if ((Kind == "receipt") != PurchaseLineId.HasValue) return "Vincule cada recepción con una partida de compra.";
+        if (Olive is { } weights && (Kind != "receipt" || string.IsNullOrWhiteSpace(Lot) ||
+            !StockMath.ValidQuantity(weights.Gross) || !StockMath.ValidCost(weights.Tare) || weights.Gross - weights.Tare != Quantity))
+            return "La recepción de aceitunas requiere un lote y un peso neto igual al bruto menos la tara.";
         if ((Kind == "transfer") != DestinationId.HasValue || DestinationId == WarehouseId)
             return "Para un traslado, seleccione un almacén de destino distinto del origen.";
         if (Expiry.HasValue && (string.IsNullOrWhiteSpace(Lot) || !(needsCost || Kind == "receipt")))

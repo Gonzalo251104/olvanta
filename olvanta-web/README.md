@@ -2,7 +2,7 @@
 
 Interfaz en español de la plataforma de operaciones comerciales Olvanta.
 
-La web 0.7.0 usa el contrato de API 0.7.0. La sucursal activa determina las operaciones disponibles. Abra estacionamientos en `/estacionamientos`, alquileres en `/alquileres`, facturación en `/facturacion`, ventas y caja en `/ventas`, compras e inventario en `/inventario` y el estado técnico en `/estado`.
+La web 0.8.0 usa el contrato de API 0.8.0. La sucursal activa determina las operaciones disponibles. Abra aceitunas en `/aceitunas`, estacionamientos en `/estacionamientos`, alquileres en `/alquileres`, facturación en `/facturacion`, ventas y caja en `/ventas`, compras e inventario en `/inventario` y el estado técnico en `/estado`.
 
 ## Arranque
 

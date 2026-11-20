@@ -194,7 +194,7 @@ public sealed class FiscalIssuer(OlvantaDbContext db, FiscalSigner signer, Sessi
         {
             "KG" or "KGM" or "KILO" => "KGM",
             "L" or "LTR" => "LTR",
-            "UNIDAD" or "UND" or "UN" or "NIU" => "NIU",
+            "UNIDAD" or "UND" or "UN" or "NIU" or "BALDE" or "BOLSA" => "NIU",
             "SERVICIO" or "ZZ" => "ZZ",
             "M" or "MTR" => "MTR",
             "CAJA" or "BX" => "BX",

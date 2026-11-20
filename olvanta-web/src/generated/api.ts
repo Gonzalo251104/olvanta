@@ -1183,6 +1183,171 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/branches/{branchId}/olives": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OliveDesk"];
+                        "application/json": components["schemas"]["OliveDesk"];
+                        "text/json": components["schemas"]["OliveDesk"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/olives/deliveries": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    customerId?: number | string;
+                };
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OliveDelivery"][];
+                        "application/json": components["schemas"]["OliveDelivery"][];
+                        "text/json": components["schemas"]["OliveDelivery"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/olives/lots/{id}/trace": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["OliveTrace"];
+                        "application/json": components["schemas"]["OliveTrace"];
+                        "text/json": components["schemas"]["OliveTrace"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/olives/repacking": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["OliveRepackInput"];
+                    "text/json": components["schemas"]["OliveRepackInput"];
+                    "application/*+json": components["schemas"]["OliveRepackInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/admin/organization": {
         parameters: {
             query?: never;
@@ -2686,6 +2851,7 @@ export interface components {
             purchaseLineId?: null | number | string;
             /** Format: int64 */
             relatedId?: null | number | string;
+            olive?: null | components["schemas"]["OliveWeights"];
         };
         MovementView: {
             /** Format: int64 */
@@ -2714,6 +2880,165 @@ export interface components {
             purchaseLineId: null | number | string;
             /** Format: int64 */
             relatedId: null | number | string;
+        };
+        OliveDelivery: {
+            /** Format: int32 */
+            lotId: number | string;
+            /** Format: int32 */
+            saleId: number | string;
+            customer: string;
+            /** Format: int32 */
+            customerId: number | string;
+            /** Format: int64 */
+            movementId: number | string;
+            /** Format: date-time */
+            time: string;
+            kind: string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            kg: number | string;
+        };
+        OliveDesk: {
+            lots: components["schemas"]["OliveLotView"][];
+            stock: components["schemas"]["OliveStock"][];
+            products: components["schemas"]["OliveProduct"][];
+            warehouses: components["schemas"]["InventoryOption"][];
+            customers: components["schemas"]["InventoryOption"][];
+        };
+        OliveLotView: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            productId: number | string;
+            product: string;
+            code: string;
+            unit: string;
+            presentation: string;
+            /** Format: double */
+            kgPerUnit: number | string;
+            wholeUnits: boolean;
+            /** Format: int32 */
+            rootId: null | number | string;
+            /** Format: int32 */
+            processId: null | number | string;
+            variety: null | string;
+            grade: null | string;
+            origin: null | string;
+            supplier: null | string;
+            supplierLot: null | string;
+            /** Format: double */
+            gross: null | number | string;
+            /** Format: double */
+            tare: null | number | string;
+            /** Format: double */
+            net: null | number | string;
+            /** Format: date */
+            expiry: null | string;
+        };
+        OliveOutput: {
+            /** Format: int32 */
+            productId: number | string;
+            code: string;
+            /** Format: double */
+            quantity: number | string;
+        };
+        OliveProcessOutput: {
+            /** Format: int32 */
+            processId: number | string;
+            /** Format: int32 */
+            lotId: number | string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            kg: number | string;
+            /** Format: double */
+            value: number | string;
+        };
+        OliveProcessView: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            sourceId: number | string;
+            /** Format: date-time */
+            time: string;
+            actor: string;
+            reason: string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            inputKg: number | string;
+            /** Format: double */
+            lossKg: number | string;
+            /** Format: double */
+            lossValue: number | string;
+        };
+        OliveProduct: {
+            /** Format: int32 */
+            id: number | string;
+            name: string;
+            unit: string;
+            presentation: string;
+            /** Format: double */
+            kgPerUnit: number | string;
+        };
+        OlivePurchase: {
+            /** Format: int32 */
+            orderId: number | string;
+            /** Format: int32 */
+            lineId: number | string;
+            reference: string;
+            /** Format: int64 */
+            receiptId: number | string;
+            /** Format: date-time */
+            time: string;
+            /** Format: double */
+            value: number | string;
+        };
+        OliveRepackInput: {
+            /** Format: uuid */
+            operationId: string;
+            /** Format: int32 */
+            warehouseId: number | string;
+            /** Format: int32 */
+            sourceId: number | string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            lossKg: number | string;
+            reason: string;
+            outputs: components["schemas"]["OliveOutput"][];
+        };
+        OliveStock: {
+            /** Format: int32 */
+            lotId: number | string;
+            /** Format: int32 */
+            warehouseId: number | string;
+            /** Format: double */
+            onHand: number | string;
+            /** Format: double */
+            available: number | string;
+            /** Format: double */
+            value: number | string;
+        };
+        OliveTrace: {
+            /** Format: int32 */
+            rootId: number | string;
+            receipt: components["schemas"]["OlivePurchase"];
+            lots: components["schemas"]["OliveLotView"][];
+            repacking: components["schemas"]["OliveProcessView"][];
+            outputs: components["schemas"]["OliveProcessOutput"][];
+            deliveries: components["schemas"]["OliveDelivery"][];
+        };
+        OliveWeights: {
+            variety: string;
+            grade: string;
+            origin: string;
+            supplierLot: string;
+            /** Format: double */
+            gross: number | string;
+            /** Format: double */
+            tare: number | string;
         };
         OpenReservation: {
             /** Format: int64 */

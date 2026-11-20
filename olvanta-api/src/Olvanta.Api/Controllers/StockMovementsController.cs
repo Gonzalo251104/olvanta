@@ -30,7 +30,7 @@ public sealed class StockMovementsController(OlvantaDbContext db, SessionAccess 
         var lot = input.Lot?.Trim().ToUpperInvariant() ?? "";
 
         await using var tx = await db.Database.BeginTransactionAsync();
-        await db.LockBranchAsync(branchId);
+        var branch = await db.LockBranchAsync(branchId);
         var ledger = db.Movements.Where(x => x.BranchId == branchId);
         var hash = Convert.ToHexString(SHA256.HashData(JsonSerializer.SerializeToUtf8Bytes(input)));
         var previous = await ledger.Where(x => x.OperationId == input.OperationId).Select(x => x.RequestHash).FirstOrDefaultAsync();
@@ -43,7 +43,14 @@ public sealed class StockMovementsController(OlvantaDbContext db, SessionAccess 
         if (!product.Active && input.Kind is ("entry" or "reserve")) return ConflictWith("El producto está inactivo.");
 
         var forProduct = ledger.Where(x => x.ProductId == input.ProductId);
+        var olive = await db.OliveLots.SingleOrDefaultAsync(x => x.BranchId == branchId && x.ProductId == product.Id && x.Code == lot);
+        if (olive != null && (input.Kind is "entry" or "receipt" or "adjust-in"))
+            return ConflictWith("Este lote pesado tiene un origen registrado. Use un lote nuevo para otra recepción.");
+        if (olive != null && !OliveUnits.Valid(olive, input.Quantity))
+            return ConflictWith("Las presentaciones de este lote se mueven en unidades enteras.");
         var lotInfo = await forProduct.Where(x => x.Lot == lot).Select(x => new { x.Expiry }).FirstOrDefaultAsync();
+        if (input.Olive != null && (!OliveUnits.IsBulk(product.Unit!) || product.Conversion != 1 || lotInfo != null || product.Currency != branch!.Currency))
+            return ConflictWith("La recepción pesada requiere un producto a granel en kg, factor 1, moneda de la sucursal y un lote interno nuevo.");
         if (lotInfo != null && input.Expiry.HasValue && input.Expiry != lotInfo.Expiry)
             return ConflictWith("El lote ya tiene otro vencimiento registrado.");
         var expiry = lotInfo == null ? input.Expiry : lotInfo.Expiry;
@@ -96,6 +103,31 @@ public sealed class StockMovementsController(OlvantaDbContext db, SessionAccess 
                 line.Received += quantity;
                 move.Quantity = quantity;
                 move.Value = StockMath.ReceiptValue(quantity, line.UnitCost);
+                if (input.Olive is OliveWeights weights)
+                {
+                    var supplier = await (from purchase in db.Purchases
+                                          join s in db.Masters on purchase.SupplierId equals s.Id
+                                          where purchase.Id == line.PurchaseId
+                                          select s.Name + " · " + s.Code).SingleAsync();
+                    db.OliveLots.Add(new OliveLot
+                    {
+                        BranchId = branchId,
+                        ProductId = product.Id,
+                        Code = lot,
+                        Product = product.Name,
+                        Unit = product.Unit!,
+                        Presentation = product.Presentation ?? "Granel",
+                        KgPerUnit = 1,
+                        Receipt = move,
+                        Supplier = supplier,
+                        SupplierLot = weights.SupplierLot.Trim(),
+                        Origin = weights.Origin.Trim(),
+                        Variety = weights.Variety.Trim(),
+                        Grade = weights.Grade.Trim(),
+                        Gross = weights.Gross,
+                        Tare = weights.Tare
+                    });
+                }
                 break;
             case "entry":
             case "adjust-in":

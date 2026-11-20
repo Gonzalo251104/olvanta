@@ -13,6 +13,12 @@ internal sealed class SaleFulfillment(OlvantaDbContext db)
     {
         if (line.WarehouseId is not int warehouse) return;
         var ledger = db.Movements.Where(x => x.BranchId == sale.BranchId && x.WarehouseId == warehouse && x.ProductId == line.ItemId);
+        if (action.Kind is "confirm" or "return")
+        {
+            var olive = await db.OliveLots.SingleOrDefaultAsync(x => x.BranchId == sale.BranchId && x.ProductId == line.ItemId && x.Code == line.Lot);
+            if (olive != null && !OliveUnits.Valid(olive, action.Kind == "return" ? action.Quantity : line.Quantity))
+                throw new TradeException("Las presentaciones de este lote se venden y devuelven en unidades enteras.");
+        }
         var movement = new StockMovement
         {
             Kind = "sale-" + action.Kind,
