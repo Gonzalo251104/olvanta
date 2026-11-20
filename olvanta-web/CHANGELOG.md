@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.6.0
+
+Consulta de disponibilidad, operación de contratos, cuotas, cargos, garantías, renovación y cobro por sucursal desde Alquileres. Acceso a la facturación de cada cuota.
+
 ## 0.5.0
 
 Bandeja de facturación por sucursal con preparación desde ventas, notas, resúmenes, bajas, descargas de archivos y consulta del historial de envío.

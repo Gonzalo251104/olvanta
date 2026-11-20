@@ -40,6 +40,10 @@ Las reglas de descuentos y redondeo de POS-01 se documentan en la [guía de vent
 
 BIL-01 incorpora emisión, firma y seguimiento en simulación con la pareja API/web 0.5.0. El envío autenticado a BETA queda pendiente por decisión del usuario. La [guía de facturación](electronic-billing.md) detalla los documentos, las pruebas de recuperación y el alcance del adaptador.
 
+### Evidencia de la fase 6
+
+RNT-01 se entrega en la versión 0.6.0. El flujo y las reglas de calendario están en la [guía de alquileres](commercial-rentals.md).
+
 ### Dependencias que se resolverán en su fase
 
-OLV-01 ampliará las conversiones para el reenvasado y las mermas. BIL-01 requiere verificar la modalidad y reglas de SUNAT vigentes para el emisor. La emisión real requiere credenciales, certificado y aceptación operativa. RNT-01 y PRK-01 requieren definir mora, prorrateo, tolerancia y redondeo. REL-01 requiere definir el alojamiento, licencias y carga de referencia.
+OLV-01 ampliará las conversiones para el reenvasado y las mermas. BIL-01 requiere verificar la modalidad y reglas de SUNAT vigentes para el emisor. La emisión real requiere credenciales, certificado y aceptación operativa. PRK-01 requiere definir tolerancia y redondeo. REL-01 requiere definir el alojamiento, licencias y carga de referencia.

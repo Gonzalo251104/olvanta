@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { useSearchParams } from 'react-router'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api, type Models } from '../../shared/workspace'
 
@@ -39,11 +40,13 @@ type Id = number | string
 
 function Preparation({
   desk,
+  initialSale,
   parent,
   submit,
   busy,
 }: {
   desk: Desk
+  initialSale?: Id
   parent?: Detail
   submit: (input: Prepare) => void
   busy: boolean
@@ -51,7 +54,9 @@ function Preparation({
   const [kind, setKind] = useState(
     parent ? (parent.document.status === 'awaiting-summary' ? 'summary' : 'void') : 'invoice',
   )
-  const [selected, setSelected] = useState(String(parent?.document.saleId ?? desk.sales[0]?.id ?? ''))
+  const [selected, setSelected] = useState(
+    String(parent?.document.saleId ?? initialSale ?? desk.sales[0]?.id ?? ''),
+  )
   const sale = desk.sales.find((s) => String(s.id) === selected)
   const options = parent
     ? parent.document.status === 'awaiting-summary'
@@ -191,7 +196,9 @@ export function BillingPage({ branch }: { branch: Models['BranchAccess'] }) {
   const params = { path: { branchId: Number(branch.id) } }
   const prefix = ['billing', branch.id]
   const [selected, setSelected] = useState<Id>()
-  const [newDoc, setNewDoc] = useState(false)
+  const [search] = useSearchParams()
+  const requestedSale = search.get('venta')
+  const [formOpen, setNewDoc] = useState<boolean>()
   const [related, setRelated] = useState(false)
   const [filter, setFilter] = useState('')
   const [scenario, setScenario] = useState('accept')
@@ -202,7 +209,10 @@ export function BillingPage({ branch }: { branch: Models['BranchAccess'] }) {
     queryFn: async () => (await api.GET(deskPath, { params })).data!,
   })
   const rows = desk.data?.documents.filter((d) => !filter || d.status === filter) ?? []
-  const id = rows.find((r) => r.id === selected)?.id ?? rows[0]?.id
+  const original = rows.find((r) => String(r.saleId) === requestedSale && ['01', '03'].includes(r.type))
+  const initialSale = desk.data?.sales.find((s) => String(s.id) === requestedSale)?.id
+  const newDoc = formOpen ?? (can && initialSale != null && !original)
+  const id = rows.find((r) => r.id === selected)?.id ?? original?.id ?? rows[0]?.id
   const details = useQuery({
     queryKey: [...prefix, 'document', id],
     enabled: id != null && !newDoc,
@@ -333,7 +343,12 @@ export function BillingPage({ branch }: { branch: Models['BranchAccess'] }) {
           {newDoc ? (
             <section className="panel">
               <h2>Preparar comprobante</h2>
-              <Preparation desk={desk.data} busy={busy} submit={prepare.mutate} />
+              <Preparation
+                desk={desk.data}
+                initialSale={initialSale}
+                busy={busy}
+                submit={prepare.mutate}
+              />
             </section>
           ) : (
             detail &&

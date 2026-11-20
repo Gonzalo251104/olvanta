@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.6.0
+
+Contratos por local con control de solapamiento, cuota mensual idempotente y prorrateo. Cuotas y cargos autorizados comparten su cuenta por cobrar con ventas y facturación. Recepción y devolución de garantías en caja.
+
 ## 0.5.0
 
 Facturación peruana en simulación, firma XMLDSig, archivos XML/ZIP/PDF, respuestas y recuperación por consulta. Incluye un adaptador SOAP para SUNAT BETA.

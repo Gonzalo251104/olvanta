@@ -30,6 +30,8 @@ export const operations: Record<string, string> = {
   open: 'Apertura',
   close: 'Cierre',
   'cash-in': 'Ingreso de efectivo',
+  'deposit-in': 'Garantía recibida',
+  'deposit-out': 'Garantía devuelta',
   'cash-out': 'Retiro de efectivo',
 }
 export const methods: Record<string, string> = {

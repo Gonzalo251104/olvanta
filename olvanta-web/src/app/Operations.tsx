@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-router'
@@ -102,6 +102,8 @@ function PasswordForm() {
   )
 }
 
+const RentalPage = lazy(() => import('../features/rentals/RentalPage'))
+
 function Workspace() {
   const cache = useQueryClient()
   const session = useQuery({ queryKey: ['session'], queryFn: currentSession })
@@ -174,6 +176,12 @@ function Workspace() {
             <>
               <MasterLinks label="Directorio" entries={['customers', 'suppliers']} />
               <MasterLinks label="Catálogo" entries={['products', 'services']} />
+              {branch.permissions.includes('rentals.read') && (
+                <div className="nav-group">
+                  <span>Inmuebles</span>
+                  <NavLink to="/alquileres">Alquileres</NavLink>
+                </div>
+              )}
               {branch.permissions.includes('billing.read') && (
                 <div className="nav-group">
                   <span>Emisión</span>
@@ -209,6 +217,16 @@ function Workspace() {
         {logout.error && <p role="alert">{logout.error.message}</p>}
         <Routes>
           <Route path="/cuenta" element={<PasswordForm />} />
+          {branch?.permissions.includes('rentals.read') && (
+            <Route
+              path="/alquileres"
+              element={
+                <Suspense fallback={<p>Cargando alquileres…</p>}>
+                  <RentalPage key={branch.id} branch={branch} />
+                </Suspense>
+              }
+            />
+          )}
           {branch?.permissions.includes('billing.read') && (
             <Route path="/facturacion" element={<BillingPage key={branch.id} branch={branch} />} />
           )}
