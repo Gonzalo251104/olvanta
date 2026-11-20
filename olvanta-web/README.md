@@ -2,7 +2,7 @@
 
 Interfaz en español de la plataforma de operaciones comerciales Olvanta.
 
-La web 0.2.0 usa el contrato de API 0.2.0. La raíz abre el acceso a los maestros, al selector de sucursales y a la administración por permisos. El estado técnico sigue disponible en `/estado`.
+La web 0.3.0 usa el contrato de API 0.3.0. La sucursal activa determina los maestros y las operaciones disponibles. Compras e inventario se abre en `/inventario` y el estado técnico en `/estado`.
 
 ## Arranque
 

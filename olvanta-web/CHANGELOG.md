@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.3.0
+
+Compras e inventario por sucursal. La web permite preparar compras, recibir partidas, operar almacenes y consultar saldos, lotes y el historial de movimientos con la API 0.3.0.
+
 ## 0.2.0
 
 Acceso de operadores, administración, selección de sucursal, catálogo y fichas de clientes y proveedores sobre la API 0.2.0. Estado técnico en /estado.

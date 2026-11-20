@@ -516,6 +516,258 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/branches/{branchId}/inventory": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["InventoryView"];
+                        "application/json": components["schemas"]["InventoryView"];
+                        "text/json": components["schemas"]["InventoryView"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/inventory/movements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    warehouseId?: number | string;
+                    productId?: number | string;
+                    before?: number | string;
+                };
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["MovementView"][];
+                        "application/json": components["schemas"]["MovementView"][];
+                        "text/json": components["schemas"]["MovementView"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["MovementInput"];
+                    "text/json": components["schemas"]["MovementInput"];
+                    "application/*+json": components["schemas"]["MovementInput"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Bad Request */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+                /** @description Conflict */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["ProblemDetails"];
+                        "application/json": components["schemas"]["ProblemDetails"];
+                        "text/json": components["schemas"]["ProblemDetails"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/inventory/warehouses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["WarehouseInput"];
+                    "text/json": components["schemas"]["WarehouseInput"];
+                    "application/*+json": components["schemas"]["WarehouseInput"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/inventory/minimum": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["MinimumInput"];
+                    "text/json": components["schemas"]["MinimumInput"];
+                    "application/*+json": components["schemas"]["MinimumInput"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/inventory/purchases": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PurchaseInput"];
+                    "text/json": components["schemas"]["PurchaseInput"];
+                    "application/*+json": components["schemas"]["PurchaseInput"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/branches/{branchId}/masters/{kind}": {
         parameters: {
             query?: never;
@@ -966,6 +1218,26 @@ export interface components {
             /** Format: int32 */
             branchId: null | number | string;
         };
+        BalanceView: {
+            /** Format: int32 */
+            warehouseId: number | string;
+            /** Format: int32 */
+            productId: number | string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            reserved: number | string;
+            /** Format: double */
+            value: number | string;
+            /** Format: double */
+            minimum: number | string;
+            lots: components["schemas"]["LotBalance"][];
+            /** Format: double */
+            available?: number | string;
+            /** Format: double */
+            averageCost?: number | string;
+            belowMinimum?: boolean;
+        };
         BranchAccess: {
             /** Format: int32 */
             id: number | string;
@@ -1005,9 +1277,33 @@ export interface components {
             branchId: number | string;
             role: string;
         };
+        InventoryOption: {
+            /** Format: int32 */
+            id: number | string;
+            name: string;
+        };
+        InventoryView: {
+            warehouses: components["schemas"]["InventoryOption"][];
+            products: components["schemas"]["ProductOption"][];
+            suppliers: components["schemas"]["InventoryOption"][];
+            purchases: components["schemas"]["PurchaseView"][];
+            balances: components["schemas"]["BalanceView"][];
+            reservations: components["schemas"]["OpenReservation"][];
+        };
         LoginRequest: {
             userName: string;
             password: string;
+        };
+        LotBalance: {
+            lot: string;
+            /** Format: date */
+            expiry: null | string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            reserved: number | string;
+            /** Format: double */
+            available?: number | string;
         };
         MasterInput: {
             name: string;
@@ -1047,12 +1343,95 @@ export interface components {
             kind: string;
             data: components["schemas"]["MasterInput"];
         };
+        MinimumInput: {
+            /** Format: int32 */
+            productId: number | string;
+            /** Format: int32 */
+            warehouseId: number | string;
+            /** Format: double */
+            quantity: number | string;
+        };
+        MovementInput: {
+            /** Format: uuid */
+            operationId: string;
+            kind: string;
+            /** Format: int32 */
+            warehouseId: number | string;
+            /** Format: int32 */
+            productId: number | string;
+            /** Format: double */
+            quantity: number | string;
+            reason: string;
+            /** Format: double */
+            unitCost?: null | number | string;
+            lot?: null | string;
+            /** Format: date */
+            expiry?: null | string;
+            /** Format: int32 */
+            destinationId?: null | number | string;
+            /** Format: int32 */
+            purchaseLineId?: null | number | string;
+            /** Format: int64 */
+            relatedId?: null | number | string;
+        };
+        MovementView: {
+            /** Format: int64 */
+            id: number | string;
+            /** Format: uuid */
+            operationId: string;
+            kind: string;
+            /** Format: date-time */
+            time: string;
+            actor: string;
+            reason: string;
+            /** Format: int32 */
+            warehouseId: number | string;
+            /** Format: int32 */
+            productId: number | string;
+            lot: string;
+            /** Format: date */
+            expiry: null | string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            reserved: number | string;
+            /** Format: double */
+            value: number | string;
+            /** Format: int32 */
+            purchaseLineId: null | number | string;
+            /** Format: int64 */
+            relatedId: null | number | string;
+        };
+        OpenReservation: {
+            /** Format: int64 */
+            id: number | string;
+            /** Format: int32 */
+            warehouseId: number | string;
+            /** Format: int32 */
+            productId: number | string;
+            lot: string;
+            /** Format: double */
+            quantity: number | string;
+            reason: string;
+        };
         OperatorView: {
             id: string;
             userName: string;
             administrator: boolean;
             version: string;
             grants: components["schemas"]["GrantInput"][];
+        };
+        OrderLineView: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            productId: number | string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            received: number | string;
+            /** Format: double */
+            unitCost: number | string;
         };
         OrganizationView: {
             company: components["schemas"]["CompanyInput"];
@@ -1062,6 +1441,43 @@ export interface components {
         PasswordChange: {
             currentPassword: string;
             newPassword: string;
+        };
+        ProblemDetails: {
+            type?: null | string;
+            title?: null | string;
+            /** Format: int32 */
+            status?: null | number | string;
+            detail?: null | string;
+            instance?: null | string;
+        };
+        ProductOption: {
+            /** Format: int32 */
+            id: number | string;
+            name: string;
+            unit: string;
+            active: boolean;
+        };
+        PurchaseInput: {
+            /** Format: int32 */
+            supplierId: number | string;
+            reference: string;
+            lines: components["schemas"]["PurchaseItem"][];
+        };
+        PurchaseItem: {
+            /** Format: int32 */
+            productId: number | string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            unitCost: number | string;
+        };
+        PurchaseView: {
+            /** Format: int32 */
+            id: number | string;
+            reference: string;
+            supplier: string;
+            currency: string;
+            lines: components["schemas"]["OrderLineView"][];
         };
         ResetInput: {
             newPassword: string;
@@ -1109,6 +1525,9 @@ export interface components {
             userName: string;
             password: string;
             grants: components["schemas"]["GrantInput"][];
+        };
+        WarehouseInput: {
+            name: string;
         };
     };
     responses: never;

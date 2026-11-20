@@ -5,6 +5,7 @@ import { Link, NavLink, Navigate, Route, Routes, useLocation } from 'react-route
 import { api, currentSession, kinds, roles } from '../shared/workspace'
 import type { Kind } from '../shared/workspace'
 import { MasterPage } from '../features/masters/MasterPage'
+import { InventoryPage } from '../features/inventory/InventoryPage'
 import { AdminPage } from '../features/admin/AdminPage'
 import { SystemPage } from '../features/system/SystemPage'
 import { Brand } from './Brand'
@@ -171,6 +172,12 @@ function Workspace() {
             <>
               <MasterLinks label="Directorio" entries={['customers', 'suppliers']} />
               <MasterLinks label="Catálogo" entries={['products', 'services']} />
+              {branch.permissions.includes('inventory.read') && (
+                <div className="nav-group">
+                  <span>Abastecimiento</span>
+                  <NavLink to="/inventario">Compras e inventario</NavLink>
+                </div>
+              )}
             </>
           )}
           {user.administrator && (
@@ -188,6 +195,9 @@ function Workspace() {
         {logout.error && <p role="alert">{logout.error.message}</p>}
         <Routes>
           <Route path="/cuenta" element={<PasswordForm />} />
+          {branch?.permissions.includes('inventory.read') && (
+            <Route path="/inventario" element={<InventoryPage key={branch.id} branch={branch} />} />
+          )}
           {user.administrator && <Route path="/administracion" element={<AdminPage />} />}
           {branch &&
             (Object.keys(kinds) as Kind[]).map((kind) => (

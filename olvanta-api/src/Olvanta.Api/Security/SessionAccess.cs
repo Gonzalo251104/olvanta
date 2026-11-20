@@ -33,7 +33,7 @@ public sealed class SessionAccess(OlvantaDbContext db, UserManager<Operator> use
                     orderby branch.Name
                     select new { branch.Id, branch.Name, branch.Currency, branch.TaxRate, Role = admin ? "administrator" : grant!.Role };
         var branches = (await query.ToListAsync()).Select(b => new BranchAccess(b.Id, b.Name, b.Currency, b.TaxRate, b.Role,
-            admin ? [AccessRules.Read, AccessRules.Write] : AccessRules.Roles[b.Role])).ToList();
+            admin ? AccessRules.All : AccessRules.Roles[b.Role])).ToList();
         return new SessionView(Actor, admin, branches);
     }
 

@@ -28,6 +28,10 @@ Los identificadores remiten a las fases y secciones del [plan del 17 de noviembr
 
 IAM-01 y CAT-01 se entregan en la pareja API/web 0.2.0. La [guía de seguridad y maestros](security-and-masters.md) incluye el recorrido de operación, la matriz de roles y los comandos para repetir las pruebas con SQL Server. Los escenarios automatizados cubren la sucursal ajena, la revocación durante una sesión, la auditoría de permisos y la conservación de una ficha inactivada.
 
+### Evidencia de la fase 3
+
+INV-01 se entrega en la versión 0.3.0. La [guía de compras e inventario](purchasing-and-inventory.md) describe las unidades, la moneda y la prueba de reservas simultáneas.
+
 ### Dependencias que se resolverán en su fase
 
-Para INV-01 y OLV-01 se acordarán precisión, conversiones y valoración. POS-01 requiere políticas de descuentos y redondeo. BIL-01 requiere verificar la modalidad y reglas de SUNAT vigentes para el emisor. La emisión real requiere credenciales, certificado y aceptación operativa. RNT-01 y PRK-01 requieren definir mora, prorrateo, tolerancia y redondeo. REL-01 requiere definir el alojamiento, licencias y carga de referencia.
+OLV-01 ampliará las conversiones para el reenvasado y las mermas. POS-01 requiere políticas de descuentos y redondeo. BIL-01 requiere verificar la modalidad y reglas de SUNAT vigentes para el emisor. La emisión real requiere credenciales, certificado y aceptación operativa. RNT-01 y PRK-01 requieren definir mora, prorrateo, tolerancia y redondeo. REL-01 requiere definir el alojamiento, licencias y carga de referencia.

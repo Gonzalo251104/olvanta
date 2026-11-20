@@ -43,9 +43,10 @@ El 17 de noviembre de 2026 se construyeron las imágenes con restauración bloqu
 ## Definición del proyecto
 
 - [Guía de seguridad y maestros](docs/business/security-and-masters.md)
+- [Guía de compras e inventario](docs/business/purchasing-and-inventory.md)
 - [Plan original del 17 de noviembre de 2026](docs/plan.md)
 - [Alcance, backlog y criterios de aceptación](docs/business/backlog.md)
 - [Glosario y reglas del negocio](docs/business/glossary.md)
 - [Decisiones de arquitectura, identidad y contrato](docs/adr)
-- [Contrato OpenAPI 0.2.0](contracts/olvanta-v1.json)
+- [Contrato OpenAPI 0.3.0](contracts/olvanta-v1.json)
 - [Flujo de contribución](CONTRIBUTING.md)
