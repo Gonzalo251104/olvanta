@@ -11,6 +11,7 @@ GO
 USE [Olvanta];
 GO
 IF USER_ID(N'olvanta_app') IS NULL CREATE USER [olvanta_app] FOR LOGIN [olvanta_app];
+ELSE ALTER USER [olvanta_app] WITH LOGIN = [olvanta_app];
 GRANT CONNECT TO [olvanta_app];
 GO
 IF SCHEMA_ID('identity') IS NULL EXEC('CREATE SCHEMA [identity]');

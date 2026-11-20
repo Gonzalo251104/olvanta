@@ -2299,6 +2299,93 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/branches/{branchId}/reports/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    From?: string;
+                    Through?: string;
+                    Seller?: string;
+                    Lot?: string;
+                };
+                header?: never;
+                path: {
+                    branchId: number;
+                    kind: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["BranchReport"];
+                        "application/json": components["schemas"]["BranchReport"];
+                        "text/json": components["schemas"]["BranchReport"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/reports/{kind}/export/{format}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    From?: string;
+                    Through?: string;
+                    Seller?: string;
+                    Lot?: string;
+                };
+                header?: never;
+                path: {
+                    branchId: number;
+                    kind: string;
+                    format: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/branches/{branchId}/sales/catalog": {
         parameters: {
             query?: never;
@@ -2643,6 +2730,14 @@ export interface components {
         };
         BranchInput: {
             name: string;
+        };
+        BranchReport: {
+            title: string;
+            branch: string;
+            currency: string;
+            scope: string;
+            columns: string[];
+            rows: string[][];
         };
         BranchView: {
             /** Format: int32 */
