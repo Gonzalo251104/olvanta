@@ -516,6 +516,195 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/branches/{branchId}/billing": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["BillingDesk"];
+                        "application/json": components["schemas"]["BillingDesk"];
+                        "text/json": components["schemas"]["BillingDesk"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["FiscalInput"];
+                    "text/json": components["schemas"]["FiscalInput"];
+                    "application/*+json": components["schemas"]["FiscalInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": number | string;
+                        "application/json": number | string;
+                        "text/json": number | string;
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/billing/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["BillDetail"];
+                        "application/json": components["schemas"]["BillDetail"];
+                        "text/json": components["schemas"]["BillDetail"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/billing/{id}/submission": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["SubmissionInput"];
+                    "text/json": components["schemas"]["SubmissionInput"];
+                    "application/*+json": components["schemas"]["SubmissionInput"];
+                };
+            };
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/billing/{id}/files/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: {
+                    attemptId?: number | string;
+                };
+                header?: never;
+                path: {
+                    branchId: number;
+                    id: number;
+                    kind: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/branches/{branchId}/inventory": {
         parameters: {
             query?: never;
@@ -1416,6 +1605,17 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AttemptView: {
+            /** Format: int64 */
+            id: number | string;
+            /** Format: date-time */
+            time: string;
+            actor: string;
+            action: string;
+            outcome: string;
+            detail: string;
+            hasResponse: boolean;
+        };
         AuditView: {
             /** Format: date-time */
             time: string;
@@ -1444,6 +1644,52 @@ export interface components {
             /** Format: double */
             averageCost?: number | string;
             belowMinimum?: boolean;
+        };
+        BillableReturn: {
+            /** Format: int64 */
+            id: number | string;
+            /** Format: int32 */
+            lineId: number | string;
+            /** Format: double */
+            amount: number | string;
+            reason: string;
+        };
+        BillableSale: {
+            /** Format: int32 */
+            id: number | string;
+            customer: string;
+            currency: string;
+            /** Format: double */
+            total: number | string;
+            returns: components["schemas"]["BillableReturn"][];
+        };
+        BillDetail: {
+            document: components["schemas"]["BillRow"];
+            data: components["schemas"]["FiscalSnapshot"];
+            digest: string;
+            ticket: null | string;
+            attempts: components["schemas"]["AttemptView"][];
+        };
+        BillingDesk: {
+            mode: string;
+            series: components["schemas"]["FiscalSeries"][];
+            sales: components["schemas"]["BillableSale"][];
+            documents: components["schemas"]["BillRow"][];
+        };
+        BillRow: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            saleId: number | string;
+            /** Format: int32 */
+            parentId: null | number | string;
+            type: string;
+            identifier: string;
+            status: string;
+            mode: string;
+            /** Format: date-time */
+            created: string;
+            hasCdr: boolean;
         };
         BranchAccess: {
             /** Format: int32 */
@@ -1492,6 +1738,83 @@ export interface components {
         };
         CsrfToken: {
             token: string;
+        };
+        FiscalInput: {
+            /** Format: uuid */
+            requestId: string;
+            /** Format: int32 */
+            saleId: number | string;
+            kind: string;
+            /** Format: int32 */
+            seriesId?: null | number | string;
+            /** Format: int32 */
+            parentId?: null | number | string;
+            /** Format: int64 */
+            returnId?: null | number | string;
+            /** Format: double */
+            charge?: null | number | string;
+            chargeReference?: null | string;
+            reason?: null | string;
+            zeroTaxCode?: null | string;
+            /** @default false */
+            notDelivered: boolean;
+            /** Format: int32 */
+            saleLineId?: null | number | string;
+        };
+        FiscalLine: {
+            /** Format: int32 */
+            saleLineId: number | string;
+            name: string;
+            unit: string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            unitPrice: number | string;
+            /** Format: double */
+            total: number | string;
+            /** Format: double */
+            tax: number | string;
+            /** Format: double */
+            rate: number | string;
+            affectation: string;
+        };
+        FiscalSeries: {
+            /** Format: int32 */
+            id: number | string;
+            kind: string;
+            code: string;
+            site: string;
+        };
+        FiscalSnapshot: {
+            issuer: string;
+            ruc: string;
+            address: string;
+            siteCode: string;
+            customer: string;
+            customerType: string;
+            customerId: string;
+            currency: string;
+            /** Format: date */
+            date: string;
+            time: string;
+            terms: string;
+            /** Format: date */
+            due: null | string;
+            /** Format: double */
+            outstanding: number | string;
+            reference: null | string;
+            referenceType: null | string;
+            /** Format: date */
+            referenceDate: null | string;
+            reason: null | string;
+            reasonCode: null | string;
+            lines: components["schemas"]["FiscalLine"][];
+            affectedNumber?: null | string;
+            affectedType?: null | string;
+            /** Format: double */
+            total?: number | string;
+            /** Format: double */
+            tax?: number | string;
         };
         GrantChange: {
             version: string;
@@ -1831,6 +2154,10 @@ export interface components {
             name: string;
             code: string;
             address: string;
+        };
+        SubmissionInput: {
+            action: string;
+            scenario?: null | string;
         };
         SystemStatus: {
             status: string;

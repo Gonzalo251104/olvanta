@@ -8,6 +8,11 @@ public sealed class DataConflictHandler : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext context, Exception exception, CancellationToken token)
     {
+        if (exception is Olvanta.Application.TradeException business)
+        {
+            await Results.Problem(statusCode: business.Status, detail: business.Message).ExecuteAsync(context);
+            return true;
+        }
         var message = exception switch
         {
             DbUpdateConcurrencyException => "El registro cambió. Vuelva a cargarlo antes de guardar.",

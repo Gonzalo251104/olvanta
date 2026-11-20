@@ -219,7 +219,7 @@
       "olvanta.application": {
         "type": "Project",
         "dependencies": {
-          "Olvanta.Domain": "[0.1.0, )"
+          "Olvanta.Domain": "[0.4.0, )"
         }
       },
       "olvanta.domain": {
@@ -230,7 +230,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "[10.0.12, )",
           "Microsoft.EntityFrameworkCore.SqlServer": "[10.0.12, )",
-          "Olvanta.Application": "[0.1.0, )",
+          "Olvanta.Application": "[0.4.0, )",
           "System.Security.Cryptography.Pkcs": "[10.0.15, )"
         }
       }

@@ -401,10 +401,28 @@
           "Newtonsoft.Json": "13.0.3"
         }
       },
+      "Microsoft.Win32.SystemEvents": {
+        "type": "Transitive",
+        "resolved": "6.0.0",
+        "contentHash": "hqTM5628jSsQiv+HGpiq3WKBl2c8v1KZfby2J6Pr7pEPlK9waPdgEO6b8A/+/xn/yZ9ulv8HuqK71ONy2tg67A=="
+      },
       "Newtonsoft.Json": {
         "type": "Transitive",
         "resolved": "13.0.3",
         "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
+      },
+      "QRCoder": {
+        "type": "Transitive",
+        "resolved": "1.8.0",
+        "contentHash": "RuvX3PEXU6pbY/I5ItAk800jm62r+YnoPLgyS2WTgwxkOnGkOfU9ORiipHUF0LkLyqM8rlroUCA319JjRYfRFQ==",
+        "dependencies": {
+          "System.Drawing.Common": "6.0.0"
+        }
+      },
+      "QuestPDF": {
+        "type": "Transitive",
+        "resolved": "2025.7.4",
+        "contentHash": "XeiWilwLnqP2BIvDG+vh1+fjUoNWczPee5qifw8VppVOH7+vmxgoxG/KANcKftgqAfXiRQ++sXOSLPZRvXxD2g=="
       },
       "System.ClientModel": {
         "type": "Transitive",
@@ -428,6 +446,14 @@
         "type": "Transitive",
         "resolved": "9.0.11",
         "contentHash": "2Us/NchH6SM69NYWzf8NRyeftdv3ILso8LMiMdAjT7ECTiZKzddiXWhAyQj6ZzbddoAOHS9GdlPbAAkwCPID3Q=="
+      },
+      "System.Drawing.Common": {
+        "type": "Transitive",
+        "resolved": "6.0.0",
+        "contentHash": "NfuoKUiP2nUWwKZN6twGqXioIe1zVD0RIj2t976A+czLHr2nY454RwwXs6JU9Htc6mwqL6Dn/nEL3dpVf2jOhg==",
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "6.0.0"
+        }
       },
       "System.IdentityModel.Tokens.Jwt": {
         "type": "Transitive",
@@ -497,14 +523,16 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.AspNetCore.OpenApi": "[10.0.12, )",
-          "Olvanta.Application": "[0.1.0, )",
-          "Olvanta.Infrastructure": "[0.1.0, )"
+          "Olvanta.Application": "[0.4.0, )",
+          "Olvanta.Infrastructure": "[0.4.0, )",
+          "QRCoder": "[1.8.0, )",
+          "QuestPDF": "[2025.7.4, )"
         }
       },
       "olvanta.application": {
         "type": "Project",
         "dependencies": {
-          "Olvanta.Domain": "[0.1.0, )"
+          "Olvanta.Domain": "[0.4.0, )"
         }
       },
       "olvanta.domain": {
@@ -515,7 +543,7 @@
         "dependencies": {
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "[10.0.12, )",
           "Microsoft.EntityFrameworkCore.SqlServer": "[10.0.12, )",
-          "Olvanta.Application": "[0.1.0, )",
+          "Olvanta.Application": "[0.4.0, )",
           "System.Security.Cryptography.Pkcs": "[10.0.15, )"
         }
       }
