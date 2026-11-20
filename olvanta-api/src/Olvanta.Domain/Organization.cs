@@ -6,6 +6,7 @@ public sealed class Branch
     public required string Name { get; set; }
     public string Currency { get; set; } = "PEN";
     public decimal TaxRate { get; set; }
+    public decimal MaxDiscount { get; set; } = 100;
 }
 
 public sealed class Company

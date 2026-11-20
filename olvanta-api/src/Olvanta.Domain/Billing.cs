@@ -20,6 +20,8 @@ public sealed class FiscalDocument
     public string? Ticket { get; set; }
     public Guid? Lease { get; set; }
     public DateTimeOffset? LeaseUntil { get; set; }
+    public DateTimeOffset? NextQuery { get; set; }
+    public int PlannedQueries { get; set; }
     public DateTimeOffset Created { get; set; } = DateTimeOffset.UtcNow;
     public required string Snapshot { get; set; }
     public required string Digest { get; set; }

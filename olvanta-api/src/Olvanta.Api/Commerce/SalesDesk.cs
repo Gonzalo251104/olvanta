@@ -29,6 +29,8 @@ internal sealed class SalesDesk(OlvantaDbContext db)
         {
             if (row == null || !StockMath.ValidQuantity(row.Quantity) || row.Discount is < 0 or > 100 || SalesMath.Money(row.Discount) != row.Discount)
                 throw new TradeException("Revise la cantidad y el porcentaje de descuento por partida.", 400);
+            if (row.Discount > branch.MaxDiscount)
+                throw new TradeException($"El descuento supera el máximo de la sucursal ({branch.MaxDiscount:0.##}%).", 400);
             var item = await masters.SingleOrDefaultAsync(x => x.Id == row.ItemId && (x.Kind == "products" || x.Kind == "services"))
                 ?? throw new TradeException("Artículo activo no encontrado.", 404);
             if (item.Currency != branch.Currency) throw new TradeException("El artículo tiene otra moneda.");

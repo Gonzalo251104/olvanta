@@ -53,7 +53,7 @@ function QuoteRow({
             name={'discount' + id}
             type="number"
             min="0"
-            max="100"
+            max={branch.maxDiscount ?? 100}
             step=".01"
             defaultValue="0"
             required

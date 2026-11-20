@@ -22,4 +22,4 @@ public sealed record BillableSale(int Id, string Customer, string Currency, deci
 public sealed record BillRow(int Id, int SaleId, int? ParentId, string Type, string Identifier, string Status, string Mode, DateTimeOffset Created, bool HasCdr);
 public sealed record BillingDesk(string Mode, List<FiscalSeries> Series, List<BillableSale> Sales, List<BillRow> Documents);
 public sealed record AttemptView(long Id, DateTimeOffset Time, string Actor, string Action, string Outcome, string Detail, bool HasResponse);
-public sealed record BillDetail(BillRow Document, FiscalSnapshot Data, string Digest, string? Ticket, List<AttemptView> Attempts);
+public sealed record BillDetail(BillRow Document, FiscalSnapshot Data, string Digest, string? Ticket, List<AttemptView> Attempts, DateTimeOffset? NextQuery = null, int PlannedQueries = 0);

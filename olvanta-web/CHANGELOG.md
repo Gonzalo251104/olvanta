@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.9.0
+
+Vista previa CSV con confirmación, configuración de descuentos y seguimiento de consultas programadas desde Facturación.
+
 ## 0.8.0
 
 Vista de existencias de aceitunas, formularios de pesada y reenvasado, y trazabilidad por lote y cliente.

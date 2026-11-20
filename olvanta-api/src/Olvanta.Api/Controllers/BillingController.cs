@@ -39,10 +39,10 @@ public sealed class BillingController(OlvantaDbContext db, SessionAccess access,
         var scope = db.FiscalDocuments.Where(x => x.BranchId == branchId && x.Id == id);
         var row = await scope.Select(Row).SingleOrDefaultAsync();
         if (row == null) return NotFound();
-        var content = await scope.Select(x => new { x.Snapshot, x.Digest, x.Ticket }).SingleAsync();
+        var content = await scope.Select(x => new { x.Snapshot, x.Digest, x.Ticket, x.NextQuery, x.PlannedQueries }).SingleAsync();
         var history = await db.FiscalAttempts.Where(x => x.DocumentId == id).OrderBy(x => x.Id)
             .Select(x => new AttemptView(x.Id, x.Time, x.Actor, x.Action, x.Outcome, x.Detail, x.Response != null)).ToListAsync();
-        return new BillDetail(row, System.Text.Json.JsonSerializer.Deserialize<FiscalSnapshot>(content.Snapshot)!, content.Digest, content.Ticket, history);
+        return new BillDetail(row, System.Text.Json.JsonSerializer.Deserialize<FiscalSnapshot>(content.Snapshot)!, content.Digest, content.Ticket, history, content.NextQuery, content.PlannedQueries);
     }
 
     [HttpPost]
@@ -56,7 +56,15 @@ public sealed class BillingController(OlvantaDbContext db, SessionAccess access,
     public async Task<IActionResult> Submission(int branchId, int id, SubmissionInput input)
     {
         if (!await access.AllowsAsync(branchId, AccessRules.Bill)) return Forbid();
-        await delivery.Process(branchId, id, input);
+        await delivery.Process(branchId, id, input, access.Actor);
+        return NoContent();
+    }
+
+    [HttpPost("{id:int}/reconciliation"), ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Reconcile(int branchId, int id)
+    {
+        if (!await access.AllowsAsync(branchId, AccessRules.Bill)) return Forbid();
+        await delivery.Schedule(branchId, id, access.Actor);
         return NoContent();
     }
 

@@ -58,6 +58,7 @@ public sealed class OlvantaDbContext(DbContextOptions<OlvantaDbContext> options)
         branch.Property(x => x.Name).HasMaxLength(100);
         branch.Property(x => x.Currency).HasMaxLength(3).HasDefaultValue("PEN");
         branch.Property(x => x.TaxRate).HasPrecision(5, 2);
+        branch.Property(x => x.MaxDiscount).HasPrecision(5, 2).HasDefaultValue(100m);
         model.Entity<Company>().ToTable("Company", "organization");
         var establishment = model.Entity<Establishment>();
         establishment.ToTable("Establishments", "organization");

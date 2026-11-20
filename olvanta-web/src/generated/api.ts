@@ -666,6 +666,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/branches/{branchId}/billing/{id}/reconciliation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    id: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description No Content */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/branches/{branchId}/billing/{id}/files/{kind}": {
         parameters: {
             query?: never;
@@ -1174,6 +1210,52 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/masters/{kind}/import/csv": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                    kind: string;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["PartyCsvInput"];
+                    "text/json": components["schemas"]["PartyCsvInput"];
+                    "application/*+json": components["schemas"]["PartyCsvInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["PartyCsvResult"];
+                        "application/json": components["schemas"]["PartyCsvResult"];
+                        "text/json": components["schemas"]["PartyCsvResult"];
+                    };
                 };
             };
         };
@@ -2508,6 +2590,13 @@ export interface components {
             digest: string;
             ticket: null | string;
             attempts: components["schemas"]["AttemptView"][];
+            /** Format: date-time */
+            nextQuery?: null | string;
+            /**
+             * Format: int32
+             * @default 0
+             */
+            plannedQueries: number | string;
         };
         BillingDesk: {
             mode: string;
@@ -2539,11 +2628,18 @@ export interface components {
             taxRate: number | string;
             role: string;
             permissions: string[];
+            /**
+             * Format: double
+             * @default 100
+             */
+            maxDiscount: number | string;
         };
         BranchDefaults: {
             currency: string;
             /** Format: double */
             taxRate: number | string;
+            /** Format: double */
+            maxDiscount?: null | number | string;
         };
         BranchInput: {
             name: string;
@@ -2577,6 +2673,17 @@ export interface components {
         };
         CsrfToken: {
             token: string;
+        };
+        CsvIssue: {
+            /** Format: int64 */
+            row: number | string;
+            message: string;
+        };
+        CsvParty: {
+            /** Format: int64 */
+            row: number | string;
+            code: string;
+            name: string;
         };
         DepositEntry: {
             /** Format: int64 */
@@ -3222,6 +3329,16 @@ export interface components {
             capacity: number | string;
             /** Format: int32 */
             occupied: number | string;
+        };
+        PartyCsvInput: {
+            content: string;
+            commit: boolean;
+        };
+        PartyCsvResult: {
+            rows: components["schemas"]["CsvParty"][];
+            issues: components["schemas"]["CsvIssue"][];
+            /** Format: int32 */
+            imported: number | string;
         };
         PasswordChange: {
             currentPassword: string;

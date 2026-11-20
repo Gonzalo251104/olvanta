@@ -32,7 +32,11 @@ export function OrganizationPage() {
         case 'defaults':
           await api.PUT('/api/v1/admin/organization/branches/{branchId}/defaults', {
             params: { path: { branchId: Number(branch!.id) } },
-            body: { currency: field('currency'), taxRate: Number(field('taxRate')) },
+            body: {
+              currency: field('currency'),
+              taxRate: Number(field('taxRate')),
+              maxDiscount: Number(field('maxDiscount')),
+            },
           })
           break
         case 'site':
@@ -127,6 +131,18 @@ export function OrganizationPage() {
             max={100}
             step=".01"
             defaultValue={branch.taxRate}
+          />
+        </label>
+        <label>
+          Descuento máximo por partida (%)
+          <input
+            name="maxDiscount"
+            type="number"
+            min="0"
+            max="100"
+            step=".01"
+            required
+            defaultValue={branch.maxDiscount ?? 100}
           />
         </label>
         <button disabled={save.isPending}>Guardar parámetros</button>

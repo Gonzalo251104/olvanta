@@ -100,9 +100,9 @@ public sealed class StockMovementsController(OlvantaDbContext db, SessionAccess 
                                   select l).SingleOrDefaultAsync();
                 if (line == null) return NotFound();
                 if (quantity > line.Quantity - line.Received) return ConflictWith("La recepción supera lo pendiente de la compra.");
-                line.Received += quantity;
                 move.Quantity = quantity;
-                move.Value = StockMath.ReceiptValue(quantity, line.UnitCost);
+                move.Value = StockMath.PartialReceiptValue(line.Received, quantity, line.UnitCost);
+                line.Received += quantity;
                 if (input.Olive is OliveWeights weights)
                 {
                     var supplier = await (from purchase in db.Purchases

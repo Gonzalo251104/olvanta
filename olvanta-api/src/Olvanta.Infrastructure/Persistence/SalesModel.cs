@@ -40,6 +40,7 @@ internal static class SalesModel
         journal.HasOne<Sale>().WithMany().HasForeignKey(x => x.SaleId).OnDelete(DeleteBehavior.Restrict);
         journal.HasOne<SaleLine>().WithMany().HasForeignKey(x => x.LineId).OnDelete(DeleteBehavior.Restrict);
         journal.HasOne<CashSession>().WithMany().HasForeignKey(x => x.CashSessionId).OnDelete(DeleteBehavior.Restrict);
+        journal.HasIndex(x => x.CashSessionId).IncludeProperties(x => x.CashDelta);
         journal.HasOne<SalesEvent>().WithMany().HasForeignKey(x => x.ReturnId).OnDelete(DeleteBehavior.Restrict);
         journal.Property(x => x.Amount).HasPrecision(16, 2);
         journal.Property(x => x.Quantity).HasPrecision(18, 6);
