@@ -66,6 +66,9 @@ internal sealed class SalesDesk(OlvantaDbContext db)
     {
         if (await db.RentCharges.AnyAsync(x => x.SaleId == sale.Id))
             throw new TradeException("La cuenta corresponde a un cargo de alquiler. Gestione el contrato en Alquileres.");
+        if (await db.ParkingStays.AnyAsync(x => x.Payment != null && x.Payment.SaleId == sale.Id) ||
+            await db.ParkingPasses.AnyAsync(x => x.Payment.SaleId == sale.Id))
+            throw new TradeException("La venta corresponde a un cobro registrado en Estacionamientos.");
         var fulfillment = new SaleFulfillment(db);
         var total = sale.Lines.Sum(x => x.Total);
         switch (input.Kind)

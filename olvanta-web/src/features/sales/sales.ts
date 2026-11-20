@@ -25,6 +25,7 @@ export const operations: Record<string, string> = {
   cancel: 'Anulación',
   dispatch: 'Despacho',
   pay: 'Cobro',
+  'parking-pay': 'Cobro de estacionamiento',
   return: 'Devolución',
   refund: 'Reembolso',
   open: 'Apertura',

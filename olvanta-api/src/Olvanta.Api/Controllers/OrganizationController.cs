@@ -46,6 +46,7 @@ public sealed class OrganizationController(OlvantaDbContext db, SessionAccess ac
         if (input.Currency != branch.Currency && (await db.Purchases.AnyAsync(x => x.BranchId == branchId) ||
             await db.Movements.AnyAsync(x => x.BranchId == branchId) || await db.Sales.AnyAsync(x => x.BranchId == branchId) ||
             await db.CashSessions.AnyAsync(x => x.BranchId == branchId) ||
+            await db.ParkingSites.AnyAsync(x => x.BranchId == branchId) ||
             await (from lease in db.Leases join unit in db.Units on lease.UnitId equals unit.Id where unit.BranchId == branchId select lease.Id).AnyAsync()))
             return Problem(statusCode: 409, detail: "La sucursal ya registra operaciones en su moneda actual.");
         branch.Currency = input.Currency;

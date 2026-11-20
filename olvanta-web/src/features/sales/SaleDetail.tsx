@@ -15,6 +15,7 @@ export function Journal({ entries, currency }: { entries: Models['TradeEntry'][]
           {Number(e.quantity) > 0 && ' · Cant. ' + e.quantity}
           {[
             'pay',
+            'parking-pay',
             'refund',
             'return',
             'open',
@@ -66,7 +67,7 @@ export function SaleDetail({
     [
       'return',
       'Registrar devolución',
-      can('sales.return') && sale.lines.some((l) => Number(l.returnable) > 0),
+      !sale.isParking && can('sales.return') && sale.lines.some((l) => Number(l.returnable) > 0),
     ],
     ['refund', 'Reembolsar', can('cash.write') && Number(sale.balance) < 0 && !!session],
     [
