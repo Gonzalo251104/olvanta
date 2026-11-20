@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.4.0
+
+Cotizaciones, pedidos, ventas, cobros parciales, reembolsos y arqueos desde Comercial. Documentos y cierres imprimibles.
+
 ## 0.3.0
 
 Compras e inventario por sucursal. La web permite preparar compras, recibir partidas, operar almacenes y consultar saldos, lotes y el historial de movimientos con la API 0.3.0.

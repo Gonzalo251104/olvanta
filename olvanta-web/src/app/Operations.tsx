@@ -6,6 +6,7 @@ import { api, currentSession, kinds, roles } from '../shared/workspace'
 import type { Kind } from '../shared/workspace'
 import { MasterPage } from '../features/masters/MasterPage'
 import { InventoryPage } from '../features/inventory/InventoryPage'
+import { SalesPage } from '../features/sales/SalesPage'
 import { AdminPage } from '../features/admin/AdminPage'
 import { SystemPage } from '../features/system/SystemPage'
 import { Brand } from './Brand'
@@ -172,6 +173,12 @@ function Workspace() {
             <>
               <MasterLinks label="Directorio" entries={['customers', 'suppliers']} />
               <MasterLinks label="Catálogo" entries={['products', 'services']} />
+              {branch.permissions.includes('sales.read') && (
+                <div className="nav-group">
+                  <span>Comercial</span>
+                  <NavLink to="/ventas">Ventas y caja</NavLink>
+                </div>
+              )}
               {branch.permissions.includes('inventory.read') && (
                 <div className="nav-group">
                   <span>Abastecimiento</span>
@@ -195,6 +202,9 @@ function Workspace() {
         {logout.error && <p role="alert">{logout.error.message}</p>}
         <Routes>
           <Route path="/cuenta" element={<PasswordForm />} />
+          {branch?.permissions.includes('sales.read') && (
+            <Route path="/ventas" element={<SalesPage key={branch.id} branch={branch} />} />
+          )}
           {branch?.permissions.includes('inventory.read') && (
             <Route path="/inventario" element={<InventoryPage key={branch.id} branch={branch} />} />
           )}

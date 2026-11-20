@@ -44,8 +44,9 @@ public sealed class OrganizationController(OlvantaDbContext db, SessionAccess ac
         var branch = await db.LockBranchAsync(branchId);
         if (branch == null) return NotFound();
         if (input.Currency != branch.Currency && (await db.Purchases.AnyAsync(x => x.BranchId == branchId) ||
-            await db.Movements.AnyAsync(x => x.BranchId == branchId)))
-            return Problem(statusCode: 409, detail: "La sucursal ya registra compras o movimientos en su moneda actual.");
+            await db.Movements.AnyAsync(x => x.BranchId == branchId) || await db.Sales.AnyAsync(x => x.BranchId == branchId) ||
+            await db.CashSessions.AnyAsync(x => x.BranchId == branchId)))
+            return Problem(statusCode: 409, detail: "La sucursal ya registra operaciones en su moneda actual.");
         branch.Currency = input.Currency;
         branch.TaxRate = input.TaxRate;
         access.Record("branch.defaults-set", $"{input.Currency} · {input.TaxRate}%", branch.Id);

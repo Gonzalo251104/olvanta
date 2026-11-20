@@ -1189,6 +1189,213 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/branches/{branchId}/sales/catalog": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["SalesCatalog"];
+                        "application/json": components["schemas"]["SalesCatalog"];
+                        "text/json": components["schemas"]["SalesCatalog"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/sales": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["SaleDetail"][];
+                        "application/json": components["schemas"]["SaleDetail"][];
+                        "text/json": components["schemas"]["SaleDetail"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/sales/cash": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["CashDetail"][];
+                        "application/json": components["schemas"]["CashDetail"][];
+                        "text/json": components["schemas"]["CashDetail"][];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/sales/quotes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["QuoteInput"];
+                    "text/json": components["schemas"]["QuoteInput"];
+                    "application/*+json": components["schemas"]["QuoteInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TradeReceipt"];
+                        "application/json": components["schemas"]["TradeReceipt"];
+                        "text/json": components["schemas"]["TradeReceipt"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/branches/{branchId}/sales/actions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    branchId: number;
+                };
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    "application/json": components["schemas"]["TradeInput"];
+                    "text/json": components["schemas"]["TradeInput"];
+                    "application/*+json": components["schemas"]["TradeInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["TradeReceipt"];
+                        "application/json": components["schemas"]["TradeReceipt"];
+                        "text/json": components["schemas"]["TradeReceipt"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/system/status": {
         parameters: {
             query?: never;
@@ -1260,6 +1467,24 @@ export interface components {
             /** Format: int32 */
             id: number | string;
             name: string;
+        };
+        CashDetail: {
+            /** Format: int32 */
+            id: number | string;
+            currency: string;
+            /** Format: date-time */
+            opened: string;
+            /** Format: date-time */
+            closed: null | string;
+            /** Format: double */
+            opening: number | string;
+            /** Format: double */
+            expected: number | string;
+            /** Format: double */
+            counted: null | number | string;
+            /** Format: double */
+            difference: null | number | string;
+            history: components["schemas"]["TradeEntry"][];
         };
         CompanyInput: {
             name: string;
@@ -1479,8 +1704,98 @@ export interface components {
             currency: string;
             lines: components["schemas"]["OrderLineView"][];
         };
+        QuoteInput: {
+            /** Format: uuid */
+            requestId: string;
+            /** Format: int32 */
+            customerId: number | string;
+            terms: string;
+            /** Format: date */
+            dueDate: null | string;
+            lines: components["schemas"]["QuoteLineInput"][];
+        };
+        QuoteLineInput: {
+            /** Format: int32 */
+            itemId: number | string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            discount: number | string;
+            /** Format: int32 */
+            warehouseId: null | number | string;
+            lot: null | string;
+        };
         ResetInput: {
             newPassword: string;
+        };
+        SaleDetail: {
+            /** Format: int32 */
+            id: number | string;
+            customer: string;
+            currency: string;
+            terms: string;
+            /** Format: date */
+            dueDate: null | string;
+            stage: string;
+            /** Format: date-time */
+            created: string;
+            /** Format: double */
+            total: number | string;
+            /** Format: double */
+            balance: number | string;
+            lines: components["schemas"]["SaleLineDetail"][];
+            history: components["schemas"]["TradeEntry"][];
+        };
+        SaleItem: {
+            /** Format: int32 */
+            id: number | string;
+            name: string;
+            code: string;
+            unit: string;
+            kind: string;
+            /** Format: double */
+            price: number | string;
+            /** Format: double */
+            taxRate: number | string;
+        };
+        SaleLineDetail: {
+            /** Format: int32 */
+            id: number | string;
+            /** Format: int32 */
+            itemId: number | string;
+            description: string;
+            unit: string;
+            /** Format: double */
+            quantity: number | string;
+            /** Format: double */
+            returnable: number | string;
+            /** Format: double */
+            price: number | string;
+            /** Format: double */
+            discount: number | string;
+            /** Format: double */
+            taxRate: number | string;
+            /** Format: double */
+            tax: number | string;
+            /** Format: double */
+            total: number | string;
+            warehouse: null | string;
+            lot: string;
+        };
+        SalesCatalog: {
+            customers: components["schemas"]["InventoryOption"][];
+            items: components["schemas"]["SaleItem"][];
+            warehouses: components["schemas"]["InventoryOption"][];
+            stock: components["schemas"]["SaleStock"][];
+        };
+        SaleStock: {
+            /** Format: int32 */
+            itemId: number | string;
+            /** Format: int32 */
+            warehouseId: number | string;
+            lot: string;
+            /** Format: double */
+            available: number | string;
         };
         SeriesInput: {
             /** Format: int32 */
@@ -1520,6 +1835,57 @@ export interface components {
         SystemStatus: {
             status: string;
             database: string;
+        };
+        TradeEntry: {
+            /** Format: int64 */
+            id: number | string;
+            kind: string;
+            /** Format: date-time */
+            time: string;
+            actor: string;
+            note: string;
+            /** Format: double */
+            amount: number | string;
+            /** Format: double */
+            quantity: number | string;
+            method: null | string;
+            /** Format: double */
+            cashDelta: number | string;
+            /** Format: int32 */
+            saleId: null | number | string;
+            /** Format: int32 */
+            lineId: null | number | string;
+            /** Format: int32 */
+            cashSessionId: null | number | string;
+            /** Format: int64 */
+            returnId: null | number | string;
+        };
+        TradeInput: {
+            /** Format: uuid */
+            requestId: string;
+            kind: string;
+            /** Format: int32 */
+            saleId?: null | number | string;
+            /** Format: int32 */
+            lineId?: null | number | string;
+            /** Format: int32 */
+            cashSessionId?: null | number | string;
+            /** Format: double */
+            amount?: null | number | string;
+            /** Format: double */
+            quantity?: null | number | string;
+            method?: null | string;
+            /** Format: int64 */
+            returnId?: null | number | string;
+            note?: null | string;
+        };
+        TradeReceipt: {
+            /** Format: int64 */
+            eventId: number | string;
+            /** Format: int32 */
+            saleId: null | number | string;
+            /** Format: int32 */
+            cashSessionId: null | number | string;
         };
         UserInput: {
             userName: string;

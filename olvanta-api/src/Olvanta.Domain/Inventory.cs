@@ -49,6 +49,7 @@ public sealed class StockMovement
     public required string Lot { get; set; }
     public DateOnly? Expiry { get; set; }
     public int? PurchaseLineId { get; set; }
+    public int? SaleLineId { get; set; }
     public long? RelatedId { get; set; }
     public decimal Quantity { get; set; }
     public decimal Reserved { get; set; }
