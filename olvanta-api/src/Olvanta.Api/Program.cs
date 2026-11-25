@@ -11,6 +11,9 @@ using Olvanta.Api.Security;
 using Olvanta.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
+var readOnlyDemo = builder.Configuration.GetValue<bool>("Demo:ReadOnly");
+if (readOnlyDemo)
+    builder.Configuration["Billing:Mode"] = "simulation";
 var connection = builder.Configuration.GetConnectionString("Olvanta")
     ?? throw new InvalidOperationException("ConnectionStrings:Olvanta is required.");
 builder.Services.AddDbContext<OlvantaDbContext>(options => options.UseSqlServer(connection));
@@ -21,7 +24,8 @@ builder.Services.AddScoped<SessionAccess>();
 builder.Services.AddSingleton<FiscalSigner>();
 builder.Services.AddScoped<FiscalIssuer>();
 builder.Services.AddScoped<FiscalDelivery>();
-builder.Services.AddHostedService<FiscalReconciler>();
+if (!readOnlyDemo)
+    builder.Services.AddHostedService<FiscalReconciler>();
 builder.Services.AddScoped<SimulatedGateway>();
 builder.Services.AddHttpClient<BetaGateway>(c =>
 {
@@ -95,6 +99,21 @@ if (args.Contains("--initialize"))
     return;
 }
 app.UseExceptionHandler();
+if (readOnlyDemo)
+{
+    app.Use(async (context, next) =>
+    {
+        var request = context.Request;
+        var sessionAction = HttpMethods.IsPost(request.Method)
+            && (request.Path == "/api/v1/auth/login" || request.Path == "/api/v1/auth/logout");
+        if (request.Path.StartsWithSegments("/api/v1/admin") || request.Path.StartsWithSegments("/openapi"))
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+        else if (!HttpMethods.IsGet(request.Method) && !HttpMethods.IsHead(request.Method) && !sessionAction)
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+        else
+            await next();
+    });
+}
 app.UseAuthentication();
 app.Use(async (context, next) =>
 {
