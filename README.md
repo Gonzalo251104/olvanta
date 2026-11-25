@@ -2,6 +2,8 @@
 
 Plataforma de operaciones comerciales para una empresa peruana. La versión 1.0.0 reúne compras, inventario, ventas, caja, facturación simulada, alquileres, estacionamientos y aceitunas, con reportes y recuperación verificada.
 
+[Abrir la demo de Olvanta 1.0.0](https://olvanta-demo.vercel.app/). Incluye 11 reportes de solo lectura con datos de prueba y ejemplos de facturación en simulación. Para generar el sitio estático, ejecute `npm run build:demo` desde `olvanta-web`. Los archivos quedan en `olvanta-web/dist-demo`.
+
 | Componente | Contenido |
 | --- | --- |
 | [API](olvanta-api/README.md) | ASP.NET Core, Identity, SQL Server y Docker Compose |

@@ -1,0 +1,308 @@
+{
+  "sales": {
+    "title": "Ventas confirmadas",
+    "scope": "2026-11-01 a 2026-11-20 · Lima",
+    "columns": [
+      "Venta",
+      "Confirmación",
+      "Vendedor",
+      "Cliente",
+      "Importe",
+      "Devoluciones"
+    ],
+    "rows": [
+      [
+        "1",
+        "2026-11-20 15:41:11",
+        "Vendedor de prueba",
+        "Cliente demostración",
+        "23.60",
+        "0.00"
+      ]
+    ]
+  },
+  "collections": {
+    "title": "Cobros y devoluciones",
+    "scope": "2026-11-01 a 2026-11-20 · Lima",
+    "columns": [
+      "Movimiento",
+      "Fecha",
+      "Caja",
+      "Tipo",
+      "Medio",
+      "Importe",
+      "Efectivo",
+      "Detalle"
+    ],
+    "rows": [
+      [
+        "5",
+        "2026-11-20 15:41:11",
+        "1",
+        "pay",
+        "cash",
+        "23.60",
+        "23.60",
+        ""
+      ],
+      [
+        "7",
+        "2026-11-20 15:41:13",
+        "1",
+        "pay",
+        "cash",
+        "40.00",
+        "40.00",
+        ""
+      ],
+      [
+        "8",
+        "2026-11-20 15:41:14",
+        "1",
+        "parking-pay",
+        "transfer",
+        "7.50",
+        "0.00",
+        "Estacionamiento · ticket #1 · PRK112"
+      ]
+    ]
+  },
+  "debt": {
+    "title": "Cuentas por cobrar",
+    "scope": "Corte al consultar",
+    "columns": [
+      "Cuenta",
+      "Cliente",
+      "Vencimiento",
+      "Saldo"
+    ],
+    "rows": [
+      [
+        "2",
+        "Cliente demostración",
+        "2026-11-01",
+        "60.00"
+      ]
+    ]
+  },
+  "cash": {
+    "title": "Arqueos de caja",
+    "scope": "2026-11-01 a 2026-11-20 · Lima",
+    "columns": [
+      "Caja",
+      "Apertura",
+      "Cierre",
+      "Fondo",
+      "Variación",
+      "Esperado",
+      "Contado",
+      "Diferencia"
+    ],
+    "rows": [
+      [
+        "1",
+        "2026-11-20 15:41:11",
+        "2026-11-20 15:41:14",
+        "100.00",
+        "63.60",
+        "163.60",
+        "163.60",
+        "0.00"
+      ]
+    ]
+  },
+  "stock": {
+    "title": "Existencias y valor de kardex",
+    "scope": "Corte al consultar",
+    "columns": [
+      "Producto",
+      "Almacén",
+      "Lote",
+      "Unidad",
+      "Existencia",
+      "Disponible",
+      "Valor"
+    ],
+    "rows": [
+      [
+        "Aceituna a granel",
+        "Recepción",
+        "ACE-INTEG",
+        "kg",
+        "18.00",
+        "18.00",
+        "144.00"
+      ]
+    ]
+  },
+  "ledger": {
+    "title": "Kardex por periodo",
+    "scope": "2026-11-01 a 2026-11-20 · Lima",
+    "columns": [
+      "Movimiento",
+      "Fecha",
+      "Tipo",
+      "Producto",
+      "Almacén",
+      "Lote",
+      "Cantidad",
+      "Reserva",
+      "Valor",
+      "Motivo"
+    ],
+    "rows": [
+      [
+        "1",
+        "2026-11-20 15:41:10",
+        "receipt",
+        "Aceituna a granel",
+        "Recepción",
+        "ACE-INTEG",
+        "20.00",
+        "0.00",
+        "160.00",
+        "Recepción pesada"
+      ],
+      [
+        "2",
+        "2026-11-20 15:41:11",
+        "sale-confirm",
+        "Aceituna a granel",
+        "Recepción",
+        "ACE-INTEG",
+        "0.00",
+        "2.00",
+        "0.00",
+        "Venta #1 · partida 1 · "
+      ],
+      [
+        "3",
+        "2026-11-20 15:41:11",
+        "sale-dispatch",
+        "Aceituna a granel",
+        "Recepción",
+        "ACE-INTEG",
+        "-2.00",
+        "-2.00",
+        "-16.00",
+        "Venta #1 · partida 1 · "
+      ]
+    ]
+  },
+  "lots": {
+    "title": "Trazabilidad de lotes de aceitunas",
+    "scope": "Corte al consultar",
+    "columns": [
+      "Lote",
+      "Producto",
+      "Unidad",
+      "Kg por unidad",
+      "Lote original",
+      "Variedad",
+      "Clasificación",
+      "Procedencia",
+      "Proveedor",
+      "Lote del proveedor",
+      "Recepción"
+    ],
+    "rows": [
+      [
+        "ACE-INTEG",
+        "Aceituna a granel",
+        "kg",
+        "1.00",
+        "ACE-INTEG",
+        "Sevillana",
+        "Extra",
+        "Tacna",
+        "Productor del valle · P-01",
+        "T-42",
+        "1"
+      ]
+    ]
+  },
+  "rentals": {
+    "title": "Ocupación y deuda de locales",
+    "scope": "Corte al consultar",
+    "columns": [
+      "Código",
+      "Local",
+      "Ocupación",
+      "Saldo de cuotas"
+    ],
+    "rows": [
+      [
+        "L01",
+        "Galería",
+        "Ocupado",
+        "60.00"
+      ]
+    ]
+  },
+  "parking": {
+    "title": "Ocupación de estacionamientos",
+    "scope": "Corte al consultar",
+    "columns": [
+      "Estacionamiento",
+      "Zona",
+      "Capacidad",
+      "Ocupadas",
+      "Libres"
+    ],
+    "rows": [
+      [
+        "Playa central",
+        "Acceso",
+        "2",
+        "0",
+        "2"
+      ]
+    ]
+  },
+  "parking-income": {
+    "title": "Ingresos de estacionamientos",
+    "scope": "2026-11-01 a 2026-11-20 · Lima",
+    "columns": [
+      "Movimiento",
+      "Fecha",
+      "Estacionamiento",
+      "Tipo",
+      "Medio",
+      "Importe"
+    ],
+    "rows": [
+      [
+        "8",
+        "2026-11-20 15:41:14",
+        "Playa central",
+        "Salida",
+        "transfer",
+        "7.50"
+      ]
+    ]
+  },
+  "billing": {
+    "title": "Comprobantes pendientes y rechazados",
+    "scope": "Corte al consultar",
+    "columns": [
+      "Registro",
+      "Comprobante",
+      "Fecha",
+      "Entorno",
+      "Estado",
+      "Ticket",
+      "Próxima consulta"
+    ],
+    "rows": [
+      [
+        "2",
+        "FI01-2",
+        "2026-11-20 15:41:13",
+        "simulation",
+        "rejected",
+        "",
+        ""
+      ]
+    ]
+  }
+}
