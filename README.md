@@ -2,7 +2,17 @@
 
 Plataforma de operaciones comerciales para una empresa peruana. La versión 1.0.0 reúne compras, inventario, ventas, caja, facturación simulada, alquileres, estacionamientos y aceitunas, con reportes y recuperación verificada.
 
-[Enlace público de la demo](https://olvanta-demo.vercel.app/).
+## Demo en línea
+
+[Abrir Olvanta](https://olvanta-demo.vercel.app/)
+
+| Usuario | Contraseña |
+| --- | --- |
+| `demo` | `Demo-8fc36351fc1c4c8ae6` |
+
+La cuenta de visitante permite consultar los datos de prueba en modo de solo lectura. La facturación electrónica funciona en simulación, sin envíos a SUNAT.
+
+## Despliegue de la demo
 
 Para desplegar la aplicación integrada desde este monorepo, publique `olvanta-api/src/Olvanta.Api` en un servicio ASP.NET Core 10 con HTTPS. Configure allí `ConnectionStrings__Olvanta` para una base SQL Server con los datos de prueba, `Demo__ReadOnly=true` y `Billing__Mode=simulation`. Desde `olvanta-web`, defina `OLVANTA_API_ORIGIN` con el origen HTTPS real de ese servicio y ejecute `npm run build:demo`. Publique el contenido de `dist-demo` en Vercel. La web usa la misma aplicación React que en local y reenvía las peticiones a la API bajo su propio dominio para conservar las cookies de sesión.
 
